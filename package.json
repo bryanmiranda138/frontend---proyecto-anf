@@ -1,0 +1,24 @@
+{
+  "name": "frontend---proyecto-anf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bryanmiranda138/frontend---proyecto-anf.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bryanmiranda138/frontend---proyecto-anf/issues"
+  },
+  "homepage": "https://github.com/bryanmiranda138/frontend---proyecto-anf#readme",
+  "devDependencies": {
+    "vite": "^8.3.5"
+  }
+}

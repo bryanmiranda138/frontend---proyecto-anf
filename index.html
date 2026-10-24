@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión y Control Financiero (SPA)</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .vista-spa {
+            display: none;
+        }
+
+        .vista-activa {
+            display: block;
+        }
+
+        .card-kpi {
+            border-left: 5px solid #0d6efd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- VISTA LOGIN -->
+    <div id="vista-login" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="text-center mb-4">Control Financiero</h4>
+                        <form id="form-login">
+                            <div class="mb-3">
+                                <label class="form-label">Correo electrónico</label>
+                                <input type="email" id="login-email" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Contraseña</label>
+                                <input type="password" id="login-pass" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL SPA (AUTENTICADO) -->
+    <div id="contenedor-app" class="d-none">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">FinanzasPro SPA</a>
+                <div class="navbar-nav me-auto">
+                    <button class="nav-link btn btn-link" onclick="navegar('panel')">Panel Financiero</button>
+                    <button class="nav-link btn btn-link" onclick="navegar('movimientos')">Ingresos y Gastos</button>
+                    <button class="nav-link btn btn-link" onclick="navegar('categorias')">Categorías</button>
+                    <button class="nav-link btn btn-link" onclick="navegar('reportes')">Reportes</button>
+                    <button class="nav-link btn btn-link solo-admin" onclick="navegar('usuarios')">Usuarios</button>
+                    <button class="nav-link btn btn-link solo-admin" onclick="navegar('bitacora')">Bitácora</button>
+                </div>
+                <span class="navbar-text me-3 text-light" id="info-usuario"></span>
+                <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </nav>
+
+        <div class="container py-4">
+            <!-- MÓDULO 5: PANEL FINANCIERO -->
+            <section id="vista-panel" class="vista-spa vista-activa">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Panel Financiero e Indicadores</h3>
+                    <div class="d-flex gap-2">
+                        <input type="date" id="filtro-inicio" class="form-control form-control-sm">
+                        <input type="date" id="filtro-fin" class="form-control form-control-sm">
+                        <button class="btn btn-primary btn-sm" onclick="cargarPanel()">Filtrar</button>
+                    </div>
+                </div>
+
+                <!-- Tarjetas de Cálculos Financieros -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card card-kpi shadow-sm">
+                            <div class="card-body">
+                                <h6 class="text-muted">Ingresos Totales</h6>
+                                <h4 class="text-success" id="kpi-ingresos">$0.00</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-kpi shadow-sm" style="border-color:#dc3545;">
+                            <div class="card-body">
+                                <h6 class="text-muted">Gastos Totales</h6>
+                                <h4 class="text-danger" id="kpi-gastos">$0.00</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-kpi shadow-sm" style="border-color:#198754;">
+                            <div class="card-body">
+                                <h6 class="text-muted">Resultado Financiero</h6>
+                                <h4 id="kpi-resultado">$0.00</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-kpi shadow-sm" style="border-color:#ffc107;">
+                            <div class="card-body">
+                                <h6 class="text-muted">% de Gastos s/ Ingresos</h6>
+                                <h4 id="kpi-porcentaje">0.00%</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm p-3">
+                            <h6>Comparativa Ingresos vs. Gastos</h6>
+                            <canvas id="graficoBalance"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm p-3">
+                            <h6>Distribución por Categorías</h6>
+                            <canvas id="graficoCategorias"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MÓDULOS 2 Y 3: INGRESOS Y GASTOS -->
+            <section id="vista-movimientos" class="vista-spa">
+                <h3>Registro de Ingresos y Gastos</h3>
+                <form id="form-movimiento" class="row g-3 bg-white p-3 rounded shadow-sm mb-4">
+                    <div class="col-md-2">
+                        <label class="form-label">Tipo</label>
+                        <select id="mov-tipo" class="form-select" onchange="filtrarCategoriasSelect()" required>
+                            <option value="ingreso">Ingreso</option>
+                            <option value="gasto">Gasto</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Categoría</label>
+                        <select id="mov-categoria" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Concepto</label>
+                        <input type="text" id="mov-concepto" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Monto ($)</label>
+                        <input type="number" id="mov-monto" class="form-control" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" id="mov-fecha" class="form-control" required>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-success">Guardar Movimiento</button>
+                    </div>
+                </form>
+
+                <table class="table table-striped bg-white shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                            <th>Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-movimientos"></tbody>
+                </table>
+            </section>
+
+            <!-- MÓDULO 6: REPORTES -->
+            <section id="vista-reportes" class="vista-spa">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Reportes Financieros Filtrados</h3>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="exportarCSV()">Exportar a Excel
+                        (CSV)</button>
+                </div>
+                <div class="row g-2 mb-3 bg-white p-3 rounded shadow-sm">
+                    <div class="col-md-3"><input type="date" id="rep-inicio" class="form-control"></div>
+                    <div class="col-md-3"><input type="date" id="rep-fin" class="form-control"></div>
+                    <div class="col-md-3">
+                        <select id="rep-tipo" class="form-select">
+                            <option value="">Todos los tipos</option>
+                            <option value="ingreso">Solo Ingresos</option>
+                            <option value="gasto">Solo Gastos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100" onclick="generarReporte()">Consultar Reporte</button>
+                    </div>
+                </div>
+                <table class="table table-bordered bg-white">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-reportes"></tbody>
+                </table>
+            </section>
+
+            <!-- MÓDULO 4: CATEGORÍAS / MÓDULO 1: USUARIOS / MÓDULO 7: BITÁCORA -->
+            <section id="vista-bitacora" class="vista-spa">
+                <h3>Bitácora de Auditoría y Seguridad</h3>
+                <table class="table table-sm table-hover bg-white shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Módulo</th>
+                            <th>Acción</th>
+                            <th>Detalle</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-bitacora"></tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module">
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+        console.log("Conectando a:", API_BASE_URL);
+
+        // 1. Define la URL pública de tu backend desplegado en Render (sin barra diagonal al final)
+        let token = localStorage.getItem('token');
+        let categoriasGlobal = [];
+        let chartBalance = null, chartCat = null;
+        let datosReporteActual = [];
+
+        // 2. Antepón API_BASE_URL a la variable url dentro de fetch()
+        async function apiFetch(url, options = {}) {
+            options.headers = {
+                ...options.headers,
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+            const res = await fetch(`${API_BASE_URL}${url}`, options);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Error en la petición');
+            return data;
+        }
+
+        // Login
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-pass').value;
+                const data = await apiFetch('/api/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+                token = data.token;
+                localStorage.setItem('token', token);
+                iniciarApp(data.usuario);
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        async function iniciarApp(usuario) {
+            document.getElementById('vista-login').classList.add('d-none');
+            document.getElementById('contenedor-app').classList.remove('d-none');
+            document.getElementById('info-usuario').textContent = `${usuario.nombre} (${usuario.rol})`;
+
+            document.querySelectorAll('.solo-admin').forEach(el => {
+                el.style.display = usuario.rol === 'admin' ? 'inline-block' : 'none';
+            });
+
+            categoriasGlobal = await apiFetch('/api/categorias');
+            filtrarCategoriasSelect();
+            cargarPanel();
+        }
+
+        function filtrarCategoriasSelect() {
+            const tipo = document.getElementById('mov-tipo').value;
+            const select = document.getElementById('mov-categoria');
+            select.innerHTML = categoriasGlobal
+                .filter(c => c.tipo === tipo && c.activa)
+                .map(c => `<option value="${c.id}">${c.nombre}</option>`)
+                .join('');
+        }
+
+        // Cargar Indicadores Financieros y Gráficos (Módulo 5)
+        async function cargarPanel() {
+            const inicio = document.getElementById('filtro-inicio').value;
+            const fin = document.getElementById('filtro-fin').value;
+            const data = await apiFetch(`/api/finanzas/resumen?fechaInicio=${inicio}&fechaFin=${fin}`);
+
+            document.getElementById('kpi-ingresos').textContent = `$${data.ingresosTotales.toFixed(2)}`;
+            document.getElementById('kpi-gastos').textContent = `$${data.gastosTotales.toFixed(2)}`;
+            document.getElementById('kpi-resultado').textContent = `$${data.resultadoFinanciero.toFixed(2)}`;
+            document.getElementById('kpi-porcentaje').textContent = `${data.porcentajeGastos.toFixed(2)}%`;
+
+            if (chartBalance) chartBalance.destroy();
+            chartBalance = new Chart(document.getElementById('graficoBalance'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ingresos Totales', 'Gastos Totales', 'Resultado Neto'],
+                    datasets: [{
+                        label: 'USD ($)',
+                        data: [data.ingresosTotales, data.gastosTotales, data.resultadoFinanciero],
+                        backgroundColor: ['#198754', '#dc3545', '#0d6efd']
+                    }]
+                }
+            });
+
+            if (chartCat) chartCat.destroy();
+            chartCat = new Chart(document.getElementById('graficoCategorias'), {
+                type: 'doughnut',
+                data: {
+                    labels: data.desgloseCategorias.map(d => `${d.categoria} (${d.tipo})`),
+                    datasets: [{
+                        data: data.desgloseCategorias.map(d => d.total),
+                        backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#198754']
+                    }]
+                }
+            });
+        }
+
+        // Registrar Ingreso o Gasto
+        document.getElementById('form-movimiento').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiFetch('/api/movimientos', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        tipo: document.getElementById('mov-tipo').value,
+                        categoria_id: document.getElementById('mov-categoria').value,
+                        concepto: document.getElementById('mov-concepto').value,
+                        monto: document.getElementById('mov-monto').value,
+                        fecha: document.getElementById('mov-fecha').value
+                    })
+                });
+                e.target.reset();
+                cargarMovimientos();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        async function cargarMovimientos() {
+            const movs = await apiFetch('/api/movimientos');
+            document.getElementById('tabla-movimientos').innerHTML = movs.map(m => `
+        <tr>
+            <td>${m.fecha}</td>
+            <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
+            <td>${m.categoria}</td>
+            <td>${m.concepto}</td>
+            <td>$${Number(m.monto).toFixed(2)}</td>
+            <td>${m.registrado_por}</td>
+        </tr>
+    `).join('');
+        }
+
+        // Reportes y Exportación CSV
+        async function generarReporte() {
+            const fi = document.getElementById('rep-inicio').value;
+            const ff = document.getElementById('rep-fin').value;
+            const tipo = document.getElementById('rep-tipo').value;
+            datosReporteActual = await apiFetch(`/api/movimientos?fechaInicio=${fi}&fechaFin=${ff}&tipo=${tipo}`);
+            document.getElementById('tabla-reportes').innerHTML = datosReporteActual.map(m => `
+        <tr><td>${m.fecha}</td><td>${m.tipo}</td><td>${m.categoria}</td><td>${m.concepto}</td><td>$${m.monto}</td></tr>
+    `).join('');
+        }
+
+        function exportarCSV() {
+            if (!datosReporteActual.length) return alert('Consulte un reporte primero.');
+            const cabeceras = 'Fecha,Tipo,Categoria,Concepto,Monto\n';
+            const filas = datosReporteActual.map(m => `${m.fecha},${m.tipo},"${m.categoria}","${m.concepto}",${m.monto}`).join('\n');
+            const blob = new Blob([cabeceras + filas], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `reporte_financiero_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+        }
+
+        async function cargarBitacora() {
+            const logs = await apiFetch('/api/bitacora');
+            document.getElementById('tabla-bitacora').innerHTML = logs.map(l => `
+        <tr><td>${l.fecha}</td><td>${l.usuario}</td><td>${l.modulo}</td><td>${l.accion}</td><td>${l.detalle}</td><td>${l.ip}</td></tr>
+    `).join('');
+        }
+
+        async function cerrarSesion() {
+            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
+            localStorage.removeItem('token');
+            location.reload();
+        }
+    </script>
+</body>
+
+</html>

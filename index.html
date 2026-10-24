@@ -23,6 +23,24 @@
         .card-kpi {
             border-left: 5px solid #0d6efd;
         }
+
+        .nav-link.activo-nav {
+            color: #fff !important;
+            font-weight: 600;
+            border-bottom: 2px solid #0d6efd;
+        }
+
+        @media print {
+            nav, .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #fff;
+            }
+            .card, .table {
+                box-shadow: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -58,12 +76,12 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="#" onclick="navegar('panel'); return false;">FinanzasPro SPA</a>
                 <div class="navbar-nav me-auto">
-                    <button class="nav-link btn btn-link" onclick="navegar('panel')">Panel Financiero</button>
-                    <button class="nav-link btn btn-link" onclick="navegar('movimientos')">Ingresos y Gastos</button>
-                    <button class="nav-link btn btn-link" onclick="navegar('categorias')">Categorías</button>
-                    <button class="nav-link btn btn-link" onclick="navegar('reportes')">Reportes</button>
-                    <button class="nav-link btn btn-link solo-admin" onclick="navegar('usuarios')">Usuarios</button>
-                    <button class="nav-link btn btn-link solo-admin" onclick="navegar('bitacora')">Bitácora</button>
+                    <button class="nav-link btn btn-link activo-nav" id="nav-panel" onclick="navegar('panel')">Panel Financiero</button>
+                    <button class="nav-link btn btn-link" id="nav-movimientos" onclick="navegar('movimientos')">Ingresos y Gastos</button>
+                    <button class="nav-link btn btn-link" id="nav-categorias" onclick="navegar('categorias')">Categorías</button>
+                    <button class="nav-link btn btn-link" id="nav-reportes" onclick="navegar('reportes')">Reportes</button>
+                    <button class="nav-link btn btn-link solo-admin" id="nav-usuarios" onclick="navegar('usuarios')">Usuarios</button>
+                    <button class="nav-link btn btn-link solo-admin" id="nav-bitacora" onclick="navegar('bitacora')">Bitácora</button>
                 </div>
                 <span class="navbar-text me-3 text-light" id="info-usuario"></span>
                 <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
@@ -73,12 +91,13 @@
         <div class="container py-4">
             <!-- MÓDULO 5: PANEL FINANCIERO -->
             <section id="vista-panel" class="vista-spa vista-activa">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                     <h3>Panel Financiero e Indicadores</h3>
-                    <div class="d-flex gap-2">
-                        <input type="date" id="filtro-inicio" class="form-control form-control-sm">
-                        <input type="date" id="filtro-fin" class="form-control form-control-sm">
+                    <div class="d-flex gap-2 no-print">
+                        <input type="date" id="filtro-inicio" class="form-control form-control-sm" title="Fecha inicio">
+                        <input type="date" id="filtro-fin" class="form-control form-control-sm" title="Fecha fin">
                         <button class="btn btn-primary btn-sm" onclick="cargarPanel()">Filtrar</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="limpiarFiltroPanel()">Limpiar</button>
                     </div>
                 </div>
 
@@ -118,7 +137,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-md-6">
                         <div class="card shadow-sm p-3">
                             <h6>Comparativa Ingresos vs. Gastos</h6>
@@ -136,8 +155,12 @@
 
             <!-- MÓDULOS 2 Y 3: INGRESOS Y GASTOS -->
             <section id="vista-movimientos" class="vista-spa">
-                <h3>Registro de Ingresos y Gastos</h3>
-                <form id="form-movimiento" class="row g-3 bg-white p-3 rounded shadow-sm mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 id="titulo-form-movimiento">Registro de Ingresos y Gastos</h3>
+                </div>
+
+                <form id="form-movimiento" class="row g-3 bg-white p-3 rounded shadow-sm mb-4 no-print">
+                    <input type="hidden" id="mov-id">
                     <div class="col-md-2">
                         <label class="form-label">Tipo</label>
                         <select id="mov-tipo" class="form-select" onchange="filtrarCategoriasSelect()" required>
@@ -151,7 +174,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Concepto</label>
-                        <input type="text" id="mov-concepto" class="form-control" required>
+                        <input type="text" id="mov-concepto" class="form-control" placeholder="Ej. Pago de alquiler, Venta..." required>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Monto ($)</label>
@@ -162,98 +185,163 @@
                         <input type="date" id="mov-fecha" class="form-control" required>
                     </div>
                     <div class="col-12 text-end">
-                        <button type="submit" class="btn btn-success">Guardar Movimiento</button>
+                        <button type="button" id="btn-cancelar-mov" class="btn btn-secondary d-none me-2" onclick="cancelarEdicionMovimiento()">Cancelar Edición</button>
+                        <button type="submit" id="btn-guardar-mov" class="btn btn-success">Guardar Movimiento</button>
                     </div>
                 </form>
 
-                <table class="table table-striped bg-white shadow-sm">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                            <th>Categoría</th>
-                            <th>Concepto</th>
-                            <th>Monto</th>
-                            <th>Usuario</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-movimientos"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Categoría</th>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Registrado por</th>
+                                <th class="text-center no-print">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-movimientos"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- MÓDULO 4: CATEGORÍAS -->
             <section id="vista-categorias" class="vista-spa">
                 <h3>Gestión de Categorías Financieras</h3>
-                <form id="form-categoria" class="row g-3 bg-white p-3 rounded shadow-sm mb-4">
-                    <div class="col-md-5">
-                        <label class="form-label">Nombre de Categoría</label>
-                        <input type="text" id="cat-nombre" class="form-control" required>
-                    </div>
+
+                <form id="form-categoria" class="row g-3 bg-white p-3 rounded shadow-sm mb-4 solo-admin no-print">
+                    <input type="hidden" id="cat-id">
                     <div class="col-md-4">
+                        <label class="form-label">Nombre de Categoría</label>
+                        <input type="text" id="cat-nombre" class="form-control" placeholder="Ej. Servicios Básicos, Ventas..." required>
+                    </div>
+                    <div class="col-md-3">
                         <label class="form-label">Tipo</label>
                         <select id="cat-tipo" class="form-select" required>
                             <option value="ingreso">Ingreso</option>
                             <option value="gasto">Gasto</option>
                         </select>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">Crear Categoría</button>
+                    <div class="col-md-3">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" id="cat-descripcion" class="form-control" placeholder="Descripción opcional">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end gap-1">
+                        <button type="submit" id="btn-guardar-cat" class="btn btn-primary w-100">Guardar</button>
+                        <button type="button" id="btn-cancelar-cat" class="btn btn-secondary d-none" onclick="cancelarEdicionCategoria()">✕</button>
                     </div>
                 </form>
 
-                <table class="table table-striped bg-white shadow-sm">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-categorias"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th class="solo-admin text-center no-print">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-categorias"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- MÓDULO 6: REPORTES -->
             <section id="vista-reportes" class="vista-spa">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                     <h3>Reportes Financieros Filtrados</h3>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="exportarCSV()">Exportar a Excel (CSV)</button>
+                    <div class="d-flex gap-2 no-print">
+                        <div class="btn-group btn-group-sm me-2" role="group" aria-label="Períodos rápidos">
+                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('diario')">Hoy (Diario)</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('mensual')">Este Mes (Mensual)</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('anual')">Este Año (Anual)</button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="aplicarPeriodoReporte('todos')">Todo</button>
+                        </div>
+                        <button class="btn btn-success btn-sm" onclick="exportarCSV()">Exportar Excel (CSV)</button>
+                        <button class="btn btn-outline-dark btn-sm" onclick="window.print()">Imprimir / PDF</button>
+                    </div>
                 </div>
-                <div class="row g-2 mb-3 bg-white p-3 rounded shadow-sm">
-                    <div class="col-md-3"><input type="date" id="rep-inicio" class="form-control"></div>
-                    <div class="col-md-3"><input type="date" id="rep-fin" class="form-control"></div>
+
+                <div class="row g-2 mb-3 bg-white p-3 rounded shadow-sm no-print">
+                    <div class="col-md-2">
+                        <label class="form-label small text-muted mb-1">Fecha Inicio</label>
+                        <input type="date" id="rep-inicio" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small text-muted mb-1">Fecha Fin</label>
+                        <input type="date" id="rep-fin" class="form-control form-control-sm">
+                    </div>
                     <div class="col-md-3">
-                        <select id="rep-tipo" class="form-select">
+                        <label class="form-label small text-muted mb-1">Tipo de Movimiento</label>
+                        <select id="rep-tipo" class="form-select form-select-sm" onchange="actualizarCategoriasReporte()">
                             <option value="">Todos los tipos</option>
                             <option value="ingreso">Solo Ingresos</option>
                             <option value="gasto">Solo Gastos</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-primary w-100" onclick="generarReporte()">Consultar Reporte</button>
+                        <label class="form-label small text-muted mb-1">Categoría</label>
+                        <select id="rep-categoria" class="form-select form-select-sm">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary btn-sm w-100" onclick="generarReporte()">Consultar Reporte</button>
                     </div>
                 </div>
-                <table class="table table-bordered bg-white">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                            <th>Categoría</th>
-                            <th>Concepto</th>
-                            <th>Monto</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-reportes"></tbody>
-                </table>
+
+                <!-- Resumen del Reporte Consultado -->
+                <div class="row g-2 mb-3">
+                    <div class="col-md-4">
+                        <div class="p-2 bg-white rounded shadow-sm border-start border-4 border-success">
+                            <small class="text-muted d-block">Total Ingresos (Filtro)</small>
+                            <strong class="text-success fs-5" id="rep-total-ingresos">$0.00</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-2 bg-white rounded shadow-sm border-start border-4 border-danger">
+                            <small class="text-muted d-block">Total Gastos (Filtro)</small>
+                            <strong class="text-danger fs-5" id="rep-total-gastos">$0.00</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-2 bg-white rounded shadow-sm border-start border-4 border-primary">
+                            <small class="text-muted d-block">Balance del Período</small>
+                            <strong class="fs-5" id="rep-total-balance">$0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped bg-white shadow-sm align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Categoría</th>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Registrado por</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-reportes"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- MÓDULO 1: USUARIOS (SOLO ADMIN) -->
             <section id="vista-usuarios" class="vista-spa">
                 <h3>Administración de Usuarios</h3>
-                <form id="form-usuario" class="row g-3 bg-white p-3 rounded shadow-sm mb-4">
+                <form id="form-usuario" class="row g-3 bg-white p-3 rounded shadow-sm mb-4 no-print">
+                    <input type="hidden" id="usr-id">
                     <div class="col-md-3">
-                        <label class="form-label">Nombre</label>
+                        <label class="form-label">Nombre Completo</label>
                         <input type="text" id="usr-nombre" class="form-control" required>
                     </div>
                     <div class="col-md-3">
@@ -262,49 +350,59 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Contraseña</label>
-                        <input type="password" id="usr-pass" class="form-control" required>
+                        <input type="password" id="usr-pass" class="form-control" placeholder="Mín. 6 caracteres" required>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Rol</label>
                         <select id="usr-rol" class="form-select" required>
-                            <option value="operador">Operador</option>
+                            <option value="empleado">Empleado</option>
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                    <div class="col-md-2 d-flex align-items-end gap-1">
+                        <button type="submit" id="btn-guardar-usr" class="btn btn-primary w-100">Registrar</button>
+                        <button type="button" id="btn-cancelar-usr" class="btn btn-secondary d-none" onclick="cancelarEdicionUsuario()">✕</button>
                     </div>
                 </form>
 
-                <table class="table table-striped bg-white shadow-sm">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Rol</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-usuarios"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th class="text-center no-print">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-usuarios"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- MÓDULO 7: BITÁCORA -->
             <section id="vista-bitacora" class="vista-spa">
-                <h3>Bitácora de Auditoría y Seguridad</h3>
-                <table class="table table-sm table-hover bg-white shadow-sm">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Usuario</th>
-                            <th>Módulo</th>
-                            <th>Acción</th>
-                            <th>Detalle</th>
-                            <th>IP</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-bitacora"></tbody>
-                </table>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Bitácora de Auditoría y Seguridad</h3>
+                    <button class="btn btn-outline-primary btn-sm no-print" onclick="cargarBitacora()">Actualizar Bitácora</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover bg-white shadow-sm align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Módulo</th>
+                                <th>Acción</th>
+                                <th>Detalle</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-bitacora"></tbody>
+                    </table>
+                </div>
             </section>
         </div>
     </div>
@@ -313,32 +411,50 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        // Configuración de URL Base compatible con Vite (Vercel) y entorno local
         const rawEnvUrl = '%VITE_API_BASE_URL%';
-        const API_BASE_URL = (rawEnvUrl.startsWith('http') ? rawEnvUrl : 'http://localhost:3000').replace(/\/+$/, '');
+        const API_BASE_URL = (rawEnvUrl.startsWith('http') ? rawEnvUrl : 'http://localhost:3000')
+            .replace(/\/+$/, '')
+            .replace(/\/api$/, '');
+
         let token = localStorage.getItem('token');
+        let usuarioActual = JSON.parse(localStorage.getItem('usuario') || 'null');
         let categoriasGlobal = [];
+        let movimientosGlobal = [];
+        let usuariosGlobal = [];
         let chartBalance = null, chartCat = null;
         let datosReporteActual = [];
 
-        // FUNCIÓN DE NAVEGACIÓN SPA (La que faltaba)
+        // Inicializar fecha por defecto en formulario de movimientos
+        document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
+
+        // FUNCIÓN DE NAVEGACIÓN SPA
         function navegar(vista) {
             document.querySelectorAll('.vista-spa').forEach(sec => {
                 sec.classList.remove('vista-activa');
             });
-            const seccionActiva = document.getElementById(`vista-${vista}`);
-            if (seccionActiva) {
-                seccionActiva.classList.add('vista-activa');
-            }
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(btn => {
+                btn.classList.remove('activo-nav');
+            });
 
-            // Cargar datos automáticamente según la vista seleccionada
+            const seccionActiva = document.getElementById(`vista-${vista}`);
+            if (seccionActiva) seccionActiva.classList.add('vista-activa');
+
+            const navBtn = document.getElementById(`nav-${vista}`);
+            if (navBtn) navBtn.classList.add('activo-nav');
+
             if (vista === 'panel') cargarPanel();
             if (vista === 'movimientos') cargarMovimientos();
             if (vista === 'categorias') cargarCategorias();
-            if (vista === 'reportes') generarReporte();
+            if (vista === 'reportes') {
+                actualizarCategoriasReporte();
+                generarReporte();
+            }
             if (vista === 'usuarios') cargarUsuarios();
             if (vista === 'bitacora') cargarBitacora();
         }
 
+        // Helper para peticiones HTTP autenticadas
         async function apiFetch(url, options = {}) {
             options.headers = {
                 ...options.headers,
@@ -346,24 +462,35 @@
                 'Authorization': `Bearer ${token}`
             };
             const res = await fetch(`${API_BASE_URL}${url}`, options);
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Error en la petición');
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) {
+                    if (url !== '/api/auth/login' && res.status === 401) {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('usuario');
+                        location.reload();
+                    }
+                }
+                throw new Error(data.error || 'Error en la petición al servidor');
+            }
             return data;
         }
 
-        // Login
+        // MÓDULO 1: LOGIN Y SESIÓN
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                const email = document.getElementById('login-email').value;
+                const email = document.getElementById('login-email').value.trim();
                 const password = document.getElementById('login-pass').value;
                 const data = await apiFetch('/api/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({ email, password })
                 });
                 token = data.token;
+                usuarioActual = data.usuario;
                 localStorage.setItem('token', token);
-                iniciarApp(data.usuario);
+                localStorage.setItem('usuario', JSON.stringify(usuarioActual));
+                iniciarApp(usuarioActual);
             } catch (err) {
                 alert(err.message);
             }
@@ -375,164 +502,394 @@
             document.getElementById('info-usuario').textContent = `${usuario.nombre} (${usuario.rol})`;
 
             document.querySelectorAll('.solo-admin').forEach(el => {
-                el.style.display = usuario.rol === 'admin' ? 'inline-block' : 'none';
+                if (el.tagName === 'TH' || el.tagName === 'TD') {
+                    el.style.display = usuario.rol === 'admin' ? 'table-cell' : 'none';
+                } else if (el.tagName === 'FORM') {
+                    el.style.display = usuario.rol === 'admin' ? 'flex' : 'none';
+                } else {
+                    el.style.display = usuario.rol === 'admin' ? 'inline-block' : 'none';
+                }
             });
 
-            categoriasGlobal = await apiFetch('/api/categorias');
-            filtrarCategoriasSelect();
+            try {
+                categoriasGlobal = await apiFetch('/api/categorias');
+                filtrarCategoriasSelect();
+                actualizarCategoriasReporte();
+                await cargarPanel();
+            } catch (err) {
+                console.error('Error al inicializar datos:', err);
+            }
+        }
+
+        async function cerrarSesion() {
+            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            location.reload();
+        }
+
+        // MÓDULO 5: PANEL FINANCIERO E INDICADORES
+        function limpiarFiltroPanel() {
+            document.getElementById('filtro-inicio').value = '';
+            document.getElementById('filtro-fin').value = '';
             cargarPanel();
         }
 
+        async function cargarPanel() {
+            try {
+                const inicio = document.getElementById('filtro-inicio').value;
+                const fin = document.getElementById('filtro-fin').value;
+                const data = await apiFetch(`/api/finanzas/resumen?fechaInicio=${inicio}&fechaFin=${fin}`);
+
+                const ingresos = Number(data.ingresosTotales || 0);
+                const gastos = Number(data.gastosTotales || 0);
+                const resultado = Number(data.resultadoFinanciero || 0);
+                const porcentaje = Number(data.porcentajeGastos || 0);
+
+                document.getElementById('kpi-ingresos').textContent = `$${ingresos.toFixed(2)}`;
+                document.getElementById('kpi-gastos').textContent = `$${gastos.toFixed(2)}`;
+                const elRes = document.getElementById('kpi-resultado');
+                elRes.textContent = `$${resultado.toFixed(2)}`;
+                elRes.className = resultado >= 0 ? 'text-primary' : 'text-danger';
+                document.getElementById('kpi-porcentaje').textContent = `${porcentaje.toFixed(2)}%`;
+
+                if (chartBalance) chartBalance.destroy();
+                chartBalance = new Chart(document.getElementById('graficoBalance'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ingresos Totales', 'Gastos Totales', 'Resultado Financiero'],
+                        datasets: [{
+                            label: 'USD ($)',
+                            data: [ingresos, gastos, resultado],
+                            backgroundColor: ['#198754', '#dc3545', '#0d6efd']
+                        }]
+                    }
+                });
+
+                if (chartCat) chartCat.destroy();
+                const desglose = data.desgloseCategorias || [];
+                chartCat = new Chart(document.getElementById('graficoCategorias'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: desglose.map(d => `${d.categoria} (${d.tipo})`),
+                        datasets: [{
+                            data: desglose.map(d => Number(d.total)),
+                            backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#198754', '#20c997']
+                        }]
+                    }
+                });
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        // MÓDULOS 2 Y 3: INGRESOS Y GASTOS (MOVIMIENTOS)
         function filtrarCategoriasSelect() {
             const tipo = document.getElementById('mov-tipo').value;
             const select = document.getElementById('mov-categoria');
-            select.innerHTML = categoriasGlobal
-                .filter(c => c.tipo === tipo && c.activa !== false)
-                .map(c => `<option value="${c.id}">${c.nombre}</option>`)
-                .join('');
+            const disponibles = categoriasGlobal.filter(c => c.tipo === tipo && c.activa !== false);
+            select.innerHTML = disponibles.length
+                ? disponibles.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('')
+                : '<option value="">Sin categorías activas</option>';
         }
 
-        // Cargar Indicadores Financieros y Gráficos (Módulo 5)
-        async function cargarPanel() {
-            const inicio = document.getElementById('filtro-inicio').value;
-            const fin = document.getElementById('filtro-fin').value;
-            const data = await apiFetch(`/api/finanzas/resumen?fechaInicio=${inicio}&fechaFin=${fin}`);
-
-            document.getElementById('kpi-ingresos').textContent = `$${Number(data.ingresosTotales || 0).toFixed(2)}`;
-            document.getElementById('kpi-gastos').textContent = `$${Number(data.gastosTotales || 0).toFixed(2)}`;
-            document.getElementById('kpi-resultado').textContent = `$${Number(data.resultadoFinanciero || 0).toFixed(2)}`;
-            document.getElementById('kpi-porcentaje').textContent = `${Number(data.porcentajeGastos || 0).toFixed(2)}%`;
-
-            if (chartBalance) chartBalance.destroy();
-            chartBalance = new Chart(document.getElementById('graficoBalance'), {
-                type: 'bar',
-                data: {
-                    labels: ['Ingresos Totales', 'Gastos Totales', 'Resultado Neto'],
-                    datasets: [{
-                        label: 'USD ($)',
-                        data: [data.ingresosTotales, data.gastosTotales, data.resultadoFinanciero],
-                        backgroundColor: ['#198754', '#dc3545', '#0d6efd']
-                    }]
-                }
-            });
-
-            if (chartCat) chartCat.destroy();
-            chartCat = new Chart(document.getElementById('graficoCategorias'), {
-                type: 'doughnut',
-                data: {
-                    labels: (data.desgloseCategorias || []).map(d => `${d.categoria} (${d.tipo})`),
-                    datasets: [{
-                        data: (data.desgloseCategorias || []).map(d => d.total),
-                        backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#198754']
-                    }]
-                }
-            });
+        async function cargarMovimientos() {
+            try {
+                movimientosGlobal = await apiFetch('/api/movimientos');
+                document.getElementById('tabla-movimientos').innerHTML = movimientosGlobal.map(m => `
+                    <tr>
+                        <td>${m.fecha}</td>
+                        <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
+                        <td>${m.categoria}</td>
+                        <td>${m.concepto}</td>
+                        <td class="fw-semibold">$${Number(m.monto).toFixed(2)}</td>
+                        <td>${m.registrado_por || ''}</td>
+                        <td class="text-center no-print">
+                            <button class="btn btn-outline-primary btn-sm" onclick="prepararEdicionMovimiento(${m.id})">Editar</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                alert(err.message);
+            }
         }
 
-        // Registrar Ingreso o Gasto
+        function prepararEdicionMovimiento(id) {
+            const mov = movimientosGlobal.find(m => m.id === id);
+            if (!mov) return;
+
+            document.getElementById('mov-id').value = mov.id;
+            document.getElementById('mov-tipo').value = mov.tipo;
+            filtrarCategoriasSelect();
+            document.getElementById('mov-categoria').value = mov.categoria_id;
+            document.getElementById('mov-concepto').value = mov.concepto;
+            document.getElementById('mov-monto').value = Number(mov.monto);
+            document.getElementById('mov-fecha').value = mov.fecha;
+
+            document.getElementById('titulo-form-movimiento').textContent = `Editando Movimiento #${mov.id}`;
+            const btnGuardar = document.getElementById('btn-guardar-mov');
+            btnGuardar.textContent = 'Actualizar Movimiento';
+            btnGuardar.classList.replace('btn-success', 'btn-primary');
+            document.getElementById('btn-cancelar-mov').classList.remove('d-none');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cancelarEdicionMovimiento() {
+            document.getElementById('form-movimiento').reset();
+            document.getElementById('mov-id').value = '';
+            document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
+            filtrarCategoriasSelect();
+
+            document.getElementById('titulo-form-movimiento').textContent = 'Registro de Ingresos y Gastos';
+            const btnGuardar = document.getElementById('btn-guardar-mov');
+            btnGuardar.textContent = 'Guardar Movimiento';
+            btnGuardar.classList.replace('btn-primary', 'btn-success');
+            document.getElementById('btn-cancelar-mov').classList.add('d-none');
+        }
+
         document.getElementById('form-movimiento').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const idEdicion = document.getElementById('mov-id').value;
+            const payload = {
+                tipo: document.getElementById('mov-tipo').value,
+                categoria_id: document.getElementById('mov-categoria').value,
+                concepto: document.getElementById('mov-concepto').value.trim(),
+                monto: Number(document.getElementById('mov-monto').value),
+                fecha: document.getElementById('mov-fecha').value
+            };
+
             try {
-                await apiFetch('/api/movimientos', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        tipo: document.getElementById('mov-tipo').value,
-                        categoria_id: document.getElementById('mov-categoria').value,
-                        concepto: document.getElementById('mov-concepto').value,
-                        monto: document.getElementById('mov-monto').value,
-                        fecha: document.getElementById('mov-fecha').value
-                    })
-                });
-                e.target.reset();
-                filtrarCategoriasSelect();
+                if (idEdicion) {
+                    await apiFetch(`/api/movimientos/${idEdicion}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    await apiFetch('/api/movimientos', {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                }
+                cancelarEdicionMovimiento();
                 cargarMovimientos();
             } catch (err) {
                 alert(err.message);
             }
         });
 
-        async function cargarMovimientos() {
-            const movs = await apiFetch('/api/movimientos');
-            document.getElementById('tabla-movimientos').innerHTML = movs.map(m => `
-                <tr>
-                    <td>${m.fecha}</td>
-                    <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
-                    <td>${m.categoria}</td>
-                    <td>${m.concepto}</td>
-                    <td>$${Number(m.monto).toFixed(2)}</td>
-                    <td>${m.registrado_por || ''}</td>
-                </tr>
-            `).join('');
+        // MÓDULO 4: CATEGORÍAS FINANCIERAS
+        async function cargarCategorias() {
+            try {
+                categoriasGlobal = await apiFetch('/api/categorias');
+                filtrarCategoriasSelect();
+                actualizarCategoriasReporte();
+                const esAdmin = usuarioActual && usuarioActual.rol === 'admin';
+                const tbody = document.getElementById('tabla-categorias');
+                if (tbody) {
+                    tbody.innerHTML = categoriasGlobal.map(c => `
+                        <tr>
+                            <td>${c.id}</td>
+                            <td class="fw-semibold">${c.nombre}</td>
+                            <td><span class="badge bg-${c.tipo === 'ingreso' ? 'success' : 'danger'}">${c.tipo.toUpperCase()}</span></td>
+                            <td>${c.descripcion || '<span class="text-muted">-</span>'}</td>
+                            <td>
+                                <span class="badge bg-${c.activa !== false ? 'primary' : 'secondary'}">
+                                    ${c.activa !== false ? 'Activa' : 'Inactiva'}
+                                </span>
+                            </td>
+                            <td class="text-center no-print" style="display: ${esAdmin ? 'table-cell' : 'none'};">
+                                <button class="btn btn-outline-primary btn-sm me-1" onclick="prepararEdicionCategoria(${c.id})">Editar</button>
+                                <button class="btn btn-outline-${c.activa !== false ? 'warning' : 'success'} btn-sm" onclick="cambiarEstadoCategoria(${c.id}, ${c.activa === false})">
+                                    ${c.activa !== false ? 'Desactivar' : 'Activar'}
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                alert(err.message);
+            }
         }
 
-        // Categorías (Módulo 4)
-        async function cargarCategorias() {
-            categoriasGlobal = await apiFetch('/api/categorias');
-            filtrarCategoriasSelect();
-            const tbody = document.getElementById('tabla-categorias');
-            if (tbody) {
-                tbody.innerHTML = categoriasGlobal.map(c => `
-                    <tr>
-                        <td>${c.id}</td>
-                        <td>${c.nombre}</td>
-                        <td><span class="badge bg-${c.tipo === 'ingreso' ? 'success' : 'danger'}">${c.tipo.toUpperCase()}</span></td>
-                        <td>${c.activa !== false ? 'Activa' : 'Inactiva'}</td>
-                    </tr>
-                `).join('');
+        function prepararEdicionCategoria(id) {
+            const cat = categoriasGlobal.find(c => c.id === id);
+            if (!cat) return;
+            document.getElementById('cat-id').value = cat.id;
+            document.getElementById('cat-nombre').value = cat.nombre;
+            document.getElementById('cat-tipo').value = cat.tipo;
+            document.getElementById('cat-descripcion').value = cat.descripcion || '';
+            document.getElementById('btn-guardar-cat').textContent = 'Actualizar';
+            document.getElementById('btn-cancelar-cat').classList.remove('d-none');
+        }
+
+        function cancelarEdicionCategoria() {
+            document.getElementById('form-categoria').reset();
+            document.getElementById('cat-id').value = '';
+            document.getElementById('btn-guardar-cat').textContent = 'Guardar';
+            document.getElementById('btn-cancelar-cat').classList.add('d-none');
+        }
+
+        async function cambiarEstadoCategoria(id, nuevoEstado) {
+            try {
+                await apiFetch(`/api/categorias/${id}/estado`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ activa: nuevoEstado })
+                });
+                cargarCategorias();
+            } catch (err) {
+                alert(err.message);
             }
         }
 
         document.getElementById('form-categoria').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const idCat = document.getElementById('cat-id').value;
+            const payload = {
+                nombre: document.getElementById('cat-nombre').value.trim(),
+                tipo: document.getElementById('cat-tipo').value,
+                descripcion: document.getElementById('cat-descripcion').value.trim()
+            };
             try {
-                await apiFetch('/api/categorias', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        nombre: document.getElementById('cat-nombre').value,
-                        tipo: document.getElementById('cat-tipo').value
-                    })
-                });
-                e.target.reset();
+                if (idCat) {
+                    await apiFetch(`/api/categorias/${idCat}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    await apiFetch('/api/categorias', {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                }
+                cancelarEdicionCategoria();
                 cargarCategorias();
             } catch (err) {
                 alert(err.message);
             }
         });
 
-        // Reportes y Exportación CSV (Módulo 6)
-        async function generarReporte() {
-            const fi = document.getElementById('rep-inicio').value;
-            const ff = document.getElementById('rep-fin').value;
+        // MÓDULO 6: REPORTES FINANCIEROS Y EXPORTACIÓN
+        function actualizarCategoriasReporte() {
             const tipo = document.getElementById('rep-tipo').value;
-            datosReporteActual = await apiFetch(`/api/movimientos?fechaInicio=${fi}&fechaFin=${ff}&tipo=${tipo}`);
-            document.getElementById('tabla-reportes').innerHTML = datosReporteActual.map(m => `
-                <tr><td>${m.fecha}</td><td>${m.tipo}</td><td>${m.categoria}</td><td>${m.concepto}</td><td>$${Number(m.monto).toFixed(2)}</td></tr>
-            `).join('');
+            const select = document.getElementById('rep-categoria');
+            const valorActual = select.value;
+            const filtradas = tipo
+                ? categoriasGlobal.filter(c => c.tipo === tipo)
+                : categoriasGlobal;
+
+            select.innerHTML = '<option value="">Todas las categorías</option>' +
+                filtradas.map(c => `<option value="${c.id}">${c.nombre} (${c.tipo})</option>`).join('');
+            select.value = valorActual;
+        }
+
+        function aplicarPeriodoReporte(periodo) {
+            const hoy = new Date();
+            const yyyy = hoy.getFullYear();
+            const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+            const dd = String(hoy.getDate()).padStart(2, '0');
+
+            const inputInicio = document.getElementById('rep-inicio');
+            const inputFin = document.getElementById('rep-fin');
+
+            if (periodo === 'diario') {
+                const fechaHoy = `${yyyy}-${mm}-${dd}`;
+                inputInicio.value = fechaHoy;
+                inputFin.value = fechaHoy;
+            } else if (periodo === 'mensual') {
+                inputInicio.value = `${yyyy}-${mm}-01`;
+                inputFin.value = `${yyyy}-${mm}-${dd}`;
+            } else if (periodo === 'anual') {
+                inputInicio.value = `${yyyy}-01-01`;
+                inputFin.value = `${yyyy}-12-31`;
+            } else {
+                inputInicio.value = '';
+                inputFin.value = '';
+            }
+            generarReporte();
+        }
+
+        async function generarReporte() {
+            try {
+                const fi = document.getElementById('rep-inicio').value;
+                const ff = document.getElementById('rep-fin').value;
+                const tipo = document.getElementById('rep-tipo').value;
+                const catId = document.getElementById('rep-categoria').value;
+
+                const params = new URLSearchParams();
+                if (fi) params.append('fechaInicio', fi);
+                if (ff) params.append('fechaFin', ff);
+                if (tipo) params.append('tipo', tipo);
+                if (catId) params.append('categoria_id', catId);
+
+                datosReporteActual = await apiFetch(`/api/movimientos?${params.toString()}`);
+
+                let sumaIngresos = 0;
+                let sumaGastos = 0;
+
+                document.getElementById('tabla-reportes').innerHTML = datosReporteActual.map(m => {
+                    const montoNum = Number(m.monto);
+                    if (m.tipo === 'ingreso') sumaIngresos += montoNum;
+                    else sumaGastos += montoNum;
+
+                    return `
+                        <tr>
+                            <td>${m.fecha}</td>
+                            <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
+                            <td>${m.categoria}</td>
+                            <td>${m.concepto}</td>
+                            <td class="fw-semibold">$${montoNum.toFixed(2)}</td>
+                            <td>${m.registrado_por || ''}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                const balance = sumaIngresos - sumaGastos;
+                document.getElementById('rep-total-ingresos').textContent = `$${sumaIngresos.toFixed(2)}`;
+                document.getElementById('rep-total-gastos').textContent = `$${sumaGastos.toFixed(2)}`;
+                const elBalance = document.getElementById('rep-total-balance');
+                elBalance.textContent = `$${balance.toFixed(2)}`;
+                elBalance.className = `fs-5 ${balance >= 0 ? 'text-primary' : 'text-danger'}`;
+            } catch (err) {
+                alert(err.message);
+            }
         }
 
         function exportarCSV() {
-            if (!datosReporteActual.length) return alert('Consulte un reporte primero.');
-            const cabeceras = 'Fecha,Tipo,Categoria,Concepto,Monto\n';
-            const filas = datosReporteActual.map(m => `${m.fecha},${m.tipo},"${m.categoria}","${m.concepto}",${m.monto}`).join('\n');
-            const blob = new Blob([cabeceras + filas], { type: 'text/csv;charset=utf-8;' });
+            if (!datosReporteActual.length) return alert('Consulte un reporte con datos primero.');
+            const cabeceras = 'Fecha,Tipo,Categoria,Concepto,Monto,RegistradoPor\n';
+            const filas = datosReporteActual.map(m =>
+                `${m.fecha},${m.tipo},"${(m.categoria || '').replace(/"/g, '""')}","${(m.concepto || '').replace(/"/g, '""')}",${Number(m.monto).toFixed(2)},"${(m.registrado_por || '').replace(/"/g, '""')}"`
+            ).join('\n');
+            const blob = new Blob(['\uFEFF' + cabeceras + filas], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `reporte_financiero_${new Date().toISOString().slice(0, 10)}.csv`;
             link.click();
         }
 
-        // Usuarios (Módulo 1)
+        // MÓDULO 1: ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN)
         async function cargarUsuarios() {
             try {
-                const usuarios = await apiFetch('/api/usuarios');
+                usuariosGlobal = await apiFetch('/api/usuarios');
                 const tbody = document.getElementById('tabla-usuarios');
                 if (tbody) {
-                    tbody.innerHTML = usuarios.map(u => `
+                    tbody.innerHTML = usuariosGlobal.map(u => `
                         <tr>
                             <td>${u.id}</td>
-                            <td>${u.nombre}</td>
+                            <td class="fw-semibold">${u.nombre}</td>
                             <td>${u.email}</td>
-                            <td>${u.rol}</td>
+                            <td><span class="badge bg-${u.rol === 'admin' ? 'dark' : 'info text-dark'}">${u.rol}</span></td>
+                            <td>
+                                <span class="badge bg-${u.activo ? 'success' : 'secondary'}">
+                                    ${u.activo ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </td>
+                            <td class="text-center no-print">
+                                <button class="btn btn-outline-primary btn-sm me-1" onclick="prepararEdicionUsuario(${u.id})">Editar</button>
+                                <button class="btn btn-outline-${u.activo ? 'danger' : 'success'} btn-sm" onclick="cambiarEstadoUsuario(${u.id}, ${!u.activo})">
+                                    ${u.activo ? 'Desactivar' : 'Activar'}
+                                </button>
+                            </td>
                         </tr>
                     `).join('');
                 }
@@ -541,48 +898,116 @@
             }
         }
 
+        function prepararEdicionUsuario(id) {
+            const u = usuariosGlobal.find(usr => usr.id === id);
+            if (!u) return;
+            document.getElementById('usr-id').value = u.id;
+            document.getElementById('usr-nombre').value = u.nombre;
+            document.getElementById('usr-email').value = u.email;
+            document.getElementById('usr-rol').value = u.rol;
+            const passInput = document.getElementById('usr-pass');
+            passInput.value = '';
+            passInput.required = false;
+            passInput.placeholder = 'Dejar vacío para no cambiar';
+            document.getElementById('btn-guardar-usr').textContent = 'Actualizar';
+            document.getElementById('btn-cancelar-usr').classList.remove('d-none');
+        }
+
+        function cancelarEdicionUsuario() {
+            document.getElementById('form-usuario').reset();
+            document.getElementById('usr-id').value = '';
+            const passInput = document.getElementById('usr-pass');
+            passInput.required = true;
+            passInput.placeholder = 'Mín. 6 caracteres';
+            document.getElementById('btn-guardar-usr').textContent = 'Registrar';
+            document.getElementById('btn-cancelar-usr').classList.add('d-none');
+        }
+
+        async function cambiarEstadoUsuario(id, nuevoEstado) {
+            try {
+                await apiFetch(`/api/usuarios/${id}/estado`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ activo: nuevoEstado })
+                });
+                cargarUsuarios();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
         document.getElementById('form-usuario').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const idUsr = document.getElementById('usr-id').value;
+            const payload = {
+                nombre: document.getElementById('usr-nombre').value.trim(),
+                email: document.getElementById('usr-email').value.trim(),
+                password: document.getElementById('usr-pass').value,
+                rol: document.getElementById('usr-rol').value
+            };
             try {
-                await apiFetch('/api/usuarios', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        nombre: document.getElementById('usr-nombre').value,
-                        email: document.getElementById('usr-email').value,
-                        password: document.getElementById('usr-pass').value,
-                        rol: document.getElementById('usr-rol').value
-                    })
-                });
-                e.target.reset();
+                if (idUsr) {
+                    await apiFetch(`/api/usuarios/${idUsr}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    await apiFetch('/api/usuarios', {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                }
+                cancelarEdicionUsuario();
                 cargarUsuarios();
             } catch (err) {
                 alert(err.message);
             }
         });
 
-        // Bitácora (Módulo 7)
+        // MÓDULO 7: BITÁCORA
         async function cargarBitacora() {
-            const logs = await apiFetch('/api/bitacora');
-            document.getElementById('tabla-bitacora').innerHTML = logs.map(l => `
-                <tr><td>${l.fecha}</td><td>${l.usuario}</td><td>${l.modulo}</td><td>${l.accion}</td><td>${l.detalle}</td><td>${l.ip}</td></tr>
-            `).join('');
+            try {
+                const logs = await apiFetch('/api/bitacora');
+                document.getElementById('tabla-bitacora').innerHTML = logs.map(l => `
+                    <tr>
+                        <td>${l.fecha}</td>
+                        <td class="fw-semibold">${l.usuario}</td>
+                        <td><span class="badge bg-secondary">${l.modulo}</span></td>
+                        <td>${l.accion}</td>
+                        <td>${l.detalle || ''}</td>
+                        <td><code>${l.ip || ''}</code></td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                alert(err.message);
+            }
         }
 
-        async function cerrarSesion() {
-            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
-            localStorage.removeItem('token');
-            location.reload();
-        }
-
-        // Asegurar que las funciones llamadas desde atributos onclick/onchange estén en el objeto global window
+        // Exponer todas las funciones necesarias en window para los eventos onclick/onchange del HTML
         Object.assign(window, {
             navegar,
             cargarPanel,
+            limpiarFiltroPanel,
             filtrarCategoriasSelect,
-            exportarCSV,
+            prepararEdicionMovimiento,
+            cancelarEdicionMovimiento,
+            prepararEdicionCategoria,
+            cancelarEdicionCategoria,
+            cambiarEstadoCategoria,
+            actualizarCategoriasReporte,
+            aplicarPeriodoReporte,
             generarReporte,
+            exportarCSV,
+            prepararEdicionUsuario,
+            cancelarEdicionUsuario,
+            cambiarEstadoUsuario,
+            cargarBitacora,
             cerrarSesion
         });
+
+        // Restaurar sesión automáticamente si ya había iniciado sesión antes
+        if (token && usuarioActual) {
+            iniciarApp(usuarioActual);
+        }
     </script>
 </body>
 

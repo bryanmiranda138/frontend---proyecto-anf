@@ -56,7 +56,7 @@
     <div id="contenedor-app" class="d-none">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">FinanzasPro SPA</a>
+                <a class="navbar-brand" href="#" onclick="navegar('panel'); return false;">FinanzasPro SPA</a>
                 <div class="navbar-nav me-auto">
                     <button class="nav-link btn btn-link" onclick="navegar('panel')">Panel Financiero</button>
                     <button class="nav-link btn btn-link" onclick="navegar('movimientos')">Ingresos y Gastos</button>
@@ -181,12 +181,44 @@
                 </table>
             </section>
 
+            <!-- MÓDULO 4: CATEGORÍAS -->
+            <section id="vista-categorias" class="vista-spa">
+                <h3>Gestión de Categorías Financieras</h3>
+                <form id="form-categoria" class="row g-3 bg-white p-3 rounded shadow-sm mb-4">
+                    <div class="col-md-5">
+                        <label class="form-label">Nombre de Categoría</label>
+                        <input type="text" id="cat-nombre" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Tipo</label>
+                        <select id="cat-tipo" class="form-select" required>
+                            <option value="ingreso">Ingreso</option>
+                            <option value="gasto">Gasto</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Crear Categoría</button>
+                    </div>
+                </form>
+
+                <table class="table table-striped bg-white shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-categorias"></tbody>
+                </table>
+            </section>
+
             <!-- MÓDULO 6: REPORTES -->
             <section id="vista-reportes" class="vista-spa">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3>Reportes Financieros Filtrados</h3>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="exportarCSV()">Exportar a Excel
-                        (CSV)</button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="exportarCSV()">Exportar a Excel (CSV)</button>
                 </div>
                 <div class="row g-2 mb-3 bg-white p-3 rounded shadow-sm">
                     <div class="col-md-3"><input type="date" id="rep-inicio" class="form-control"></div>
@@ -216,7 +248,48 @@
                 </table>
             </section>
 
-            <!-- MÓDULO 4: CATEGORÍAS / MÓDULO 1: USUARIOS / MÓDULO 7: BITÁCORA -->
+            <!-- MÓDULO 1: USUARIOS (SOLO ADMIN) -->
+            <section id="vista-usuarios" class="vista-spa">
+                <h3>Administración de Usuarios</h3>
+                <form id="form-usuario" class="row g-3 bg-white p-3 rounded shadow-sm mb-4">
+                    <div class="col-md-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" id="usr-nombre" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Correo electrónico</label>
+                        <input type="email" id="usr-email" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" id="usr-pass" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Rol</label>
+                        <select id="usr-rol" class="form-select" required>
+                            <option value="operador">Operador</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                    </div>
+                </form>
+
+                <table class="table table-striped bg-white shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-usuarios"></tbody>
+                </table>
+            </section>
+
+            <!-- MÓDULO 7: BITÁCORA -->
             <section id="vista-bitacora" class="vista-spa">
                 <h3>Bitácora de Auditoría y Seguridad</h3>
                 <table class="table table-sm table-hover bg-white shadow-sm">
@@ -239,18 +312,33 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
     <script>
         const rawEnvUrl = '%VITE_API_BASE_URL%';
-        const API_BASE_URL = rawEnvUrl.startsWith('http')
-            ? rawEnvUrl
-            : 'http://localhost:3000/api';
+        const API_BASE_URL = (rawEnvUrl.startsWith('http') ? rawEnvUrl : 'http://localhost:3000').replace(/\/+$/, '');
         let token = localStorage.getItem('token');
         let categoriasGlobal = [];
         let chartBalance = null, chartCat = null;
         let datosReporteActual = [];
 
-        // 2. Antepón API_BASE_URL a la variable url dentro de fetch()
+        // FUNCIÓN DE NAVEGACIÓN SPA (La que faltaba)
+        function navegar(vista) {
+            document.querySelectorAll('.vista-spa').forEach(sec => {
+                sec.classList.remove('vista-activa');
+            });
+            const seccionActiva = document.getElementById(`vista-${vista}`);
+            if (seccionActiva) {
+                seccionActiva.classList.add('vista-activa');
+            }
+
+            // Cargar datos automáticamente según la vista seleccionada
+            if (vista === 'panel') cargarPanel();
+            if (vista === 'movimientos') cargarMovimientos();
+            if (vista === 'categorias') cargarCategorias();
+            if (vista === 'reportes') generarReporte();
+            if (vista === 'usuarios') cargarUsuarios();
+            if (vista === 'bitacora') cargarBitacora();
+        }
+
         async function apiFetch(url, options = {}) {
             options.headers = {
                 ...options.headers,
@@ -299,7 +387,7 @@
             const tipo = document.getElementById('mov-tipo').value;
             const select = document.getElementById('mov-categoria');
             select.innerHTML = categoriasGlobal
-                .filter(c => c.tipo === tipo && c.activa)
+                .filter(c => c.tipo === tipo && c.activa !== false)
                 .map(c => `<option value="${c.id}">${c.nombre}</option>`)
                 .join('');
         }
@@ -310,10 +398,10 @@
             const fin = document.getElementById('filtro-fin').value;
             const data = await apiFetch(`/api/finanzas/resumen?fechaInicio=${inicio}&fechaFin=${fin}`);
 
-            document.getElementById('kpi-ingresos').textContent = `$${data.ingresosTotales.toFixed(2)}`;
-            document.getElementById('kpi-gastos').textContent = `$${data.gastosTotales.toFixed(2)}`;
-            document.getElementById('kpi-resultado').textContent = `$${data.resultadoFinanciero.toFixed(2)}`;
-            document.getElementById('kpi-porcentaje').textContent = `${data.porcentajeGastos.toFixed(2)}%`;
+            document.getElementById('kpi-ingresos').textContent = `$${Number(data.ingresosTotales || 0).toFixed(2)}`;
+            document.getElementById('kpi-gastos').textContent = `$${Number(data.gastosTotales || 0).toFixed(2)}`;
+            document.getElementById('kpi-resultado').textContent = `$${Number(data.resultadoFinanciero || 0).toFixed(2)}`;
+            document.getElementById('kpi-porcentaje').textContent = `${Number(data.porcentajeGastos || 0).toFixed(2)}%`;
 
             if (chartBalance) chartBalance.destroy();
             chartBalance = new Chart(document.getElementById('graficoBalance'), {
@@ -332,9 +420,9 @@
             chartCat = new Chart(document.getElementById('graficoCategorias'), {
                 type: 'doughnut',
                 data: {
-                    labels: data.desgloseCategorias.map(d => `${d.categoria} (${d.tipo})`),
+                    labels: (data.desgloseCategorias || []).map(d => `${d.categoria} (${d.tipo})`),
                     datasets: [{
-                        data: data.desgloseCategorias.map(d => d.total),
+                        data: (data.desgloseCategorias || []).map(d => d.total),
                         backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#198754']
                     }]
                 }
@@ -356,6 +444,7 @@
                     })
                 });
                 e.target.reset();
+                filtrarCategoriasSelect();
                 cargarMovimientos();
             } catch (err) {
                 alert(err.message);
@@ -365,26 +454,60 @@
         async function cargarMovimientos() {
             const movs = await apiFetch('/api/movimientos');
             document.getElementById('tabla-movimientos').innerHTML = movs.map(m => `
-        <tr>
-            <td>${m.fecha}</td>
-            <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
-            <td>${m.categoria}</td>
-            <td>${m.concepto}</td>
-            <td>$${Number(m.monto).toFixed(2)}</td>
-            <td>${m.registrado_por}</td>
-        </tr>
-    `).join('');
+                <tr>
+                    <td>${m.fecha}</td>
+                    <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
+                    <td>${m.categoria}</td>
+                    <td>${m.concepto}</td>
+                    <td>$${Number(m.monto).toFixed(2)}</td>
+                    <td>${m.registrado_por || ''}</td>
+                </tr>
+            `).join('');
         }
 
-        // Reportes y Exportación CSV
+        // Categorías (Módulo 4)
+        async function cargarCategorias() {
+            categoriasGlobal = await apiFetch('/api/categorias');
+            filtrarCategoriasSelect();
+            const tbody = document.getElementById('tabla-categorias');
+            if (tbody) {
+                tbody.innerHTML = categoriasGlobal.map(c => `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td>${c.nombre}</td>
+                        <td><span class="badge bg-${c.tipo === 'ingreso' ? 'success' : 'danger'}">${c.tipo.toUpperCase()}</span></td>
+                        <td>${c.activa !== false ? 'Activa' : 'Inactiva'}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        document.getElementById('form-categoria').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiFetch('/api/categorias', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        nombre: document.getElementById('cat-nombre').value,
+                        tipo: document.getElementById('cat-tipo').value
+                    })
+                });
+                e.target.reset();
+                cargarCategorias();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        // Reportes y Exportación CSV (Módulo 6)
         async function generarReporte() {
             const fi = document.getElementById('rep-inicio').value;
             const ff = document.getElementById('rep-fin').value;
             const tipo = document.getElementById('rep-tipo').value;
             datosReporteActual = await apiFetch(`/api/movimientos?fechaInicio=${fi}&fechaFin=${ff}&tipo=${tipo}`);
             document.getElementById('tabla-reportes').innerHTML = datosReporteActual.map(m => `
-        <tr><td>${m.fecha}</td><td>${m.tipo}</td><td>${m.categoria}</td><td>${m.concepto}</td><td>$${m.monto}</td></tr>
-    `).join('');
+                <tr><td>${m.fecha}</td><td>${m.tipo}</td><td>${m.categoria}</td><td>${m.concepto}</td><td>$${Number(m.monto).toFixed(2)}</td></tr>
+            `).join('');
         }
 
         function exportarCSV() {
@@ -398,11 +521,51 @@
             link.click();
         }
 
+        // Usuarios (Módulo 1)
+        async function cargarUsuarios() {
+            try {
+                const usuarios = await apiFetch('/api/usuarios');
+                const tbody = document.getElementById('tabla-usuarios');
+                if (tbody) {
+                    tbody.innerHTML = usuarios.map(u => `
+                        <tr>
+                            <td>${u.id}</td>
+                            <td>${u.nombre}</td>
+                            <td>${u.email}</td>
+                            <td>${u.rol}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.getElementById('form-usuario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiFetch('/api/usuarios', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        nombre: document.getElementById('usr-nombre').value,
+                        email: document.getElementById('usr-email').value,
+                        password: document.getElementById('usr-pass').value,
+                        rol: document.getElementById('usr-rol').value
+                    })
+                });
+                e.target.reset();
+                cargarUsuarios();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        // Bitácora (Módulo 7)
         async function cargarBitacora() {
             const logs = await apiFetch('/api/bitacora');
             document.getElementById('tabla-bitacora').innerHTML = logs.map(l => `
-        <tr><td>${l.fecha}</td><td>${l.usuario}</td><td>${l.modulo}</td><td>${l.accion}</td><td>${l.detalle}</td><td>${l.ip}</td></tr>
-    `).join('');
+                <tr><td>${l.fecha}</td><td>${l.usuario}</td><td>${l.modulo}</td><td>${l.accion}</td><td>${l.detalle}</td><td>${l.ip}</td></tr>
+            `).join('');
         }
 
         async function cerrarSesion() {
@@ -410,6 +573,16 @@
             localStorage.removeItem('token');
             location.reload();
         }
+
+        // Asegurar que las funciones llamadas desde atributos onclick/onchange estén en el objeto global window
+        Object.assign(window, {
+            navegar,
+            cargarPanel,
+            filtrarCategoriasSelect,
+            exportarCSV,
+            generarReporte,
+            cerrarSesion
+        });
     </script>
 </body>
 

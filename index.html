@@ -1,15 +1,40 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión y Control Financiero (SPA)</title>
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root,
+        [data-bs-theme="light"] {
+            --bg-app: #f4f6f9;
+            --bg-superficie: #ffffff;
+            --borde-suave: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-bs-theme="dark"] {
+            --bg-app: #0f172a;
+            --bg-superficie: #1e293b;
+            --borde-suave: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            background-color: #f4f6f9;
+            background-color: var(--bg-app);
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .superficie-app {
+            background-color: var(--bg-superficie) !important;
+            border: 1px solid var(--borde-suave);
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .card {
+            background-color: var(--bg-superficie);
+            border: 1px solid var(--borde-suave);
         }
 
         .vista-spa {
@@ -30,15 +55,32 @@
             border-bottom: 2px solid #0d6efd;
         }
 
+        /* Ajustes para el menú hamburguesa en móviles */
+        @media (max-width: 991.98px) {
+            .navbar-nav .nav-link {
+                text-align: left;
+                padding: 0.6rem 0.75rem;
+                border-bottom: none !important;
+                border-radius: 0.375rem;
+            }
+
+            .nav-link.activo-nav {
+                background-color: rgba(13, 110, 253, 0.25);
+                border-left: 4px solid #0d6efd;
+            }
+        }
+
         @media print {
             nav, .no-print {
                 display: none !important;
             }
             body {
-                background-color: #fff;
+                background-color: #fff !important;
+                color: #000 !important;
             }
-            .card, .table {
+            .card, .table, .superficie-app {
                 box-shadow: none !important;
+                background-color: #fff !important;
             }
         }
     </style>
@@ -49,8 +91,13 @@
     <!-- VISTA LOGIN -->
     <div id="vista-login" class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div class="col-11 col-sm-8 col-md-5 col-lg-4">
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alternarTema()" id="btn-tema-login">
+                        🌙 Modo Oscuro
+                    </button>
+                </div>
+                <div class="card shadow-sm superficie-app">
                     <div class="card-body p-4">
                         <h4 class="text-center mb-4">Control Financiero</h4>
                         <form id="form-login">
@@ -72,80 +119,112 @@
 
     <!-- CONTENEDOR PRINCIPAL SPA (AUTENTICADO) -->
     <div id="contenedor-app" class="d-none">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#" onclick="navegar('panel'); return false;">FinanzasPro SPA</a>
-                <div class="navbar-nav me-auto">
-                    <button class="nav-link btn btn-link activo-nav" id="nav-panel" onclick="navegar('panel')">Panel Financiero</button>
-                    <button class="nav-link btn btn-link" id="nav-movimientos" onclick="navegar('movimientos')">Ingresos y Gastos</button>
-                    <button class="nav-link btn btn-link" id="nav-categorias" onclick="navegar('categorias')">Categorías</button>
-                    <button class="nav-link btn btn-link" id="nav-reportes" onclick="navegar('reportes')">Reportes</button>
-                    <button class="nav-link btn btn-link solo-admin" id="nav-usuarios" onclick="navegar('usuarios')">Usuarios</button>
-                    <button class="nav-link btn btn-link solo-admin" id="nav-bitacora" onclick="navegar('bitacora')">Bitácora</button>
+                <a class="navbar-brand fw-bold" href="#" onclick="navegar('panel'); return false;">FinanzasPro SPA</a>
+                
+                <!-- Controles rápidos en móvil + Botón Hamburguesa -->
+                <div class="d-flex align-items-center gap-2 d-lg-none">
+                    <button type="button" class="btn btn-outline-light btn-sm" onclick="alternarTema()" title="Cambiar tema">
+                        <span class="icono-tema">🌙</span>
+                    </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir menú">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                 </div>
-                <span class="navbar-text me-3 text-light" id="info-usuario"></span>
-                <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
+
+                <!-- Contenido colapsable del Navbar -->
+                <div class="collapse navbar-collapse" id="menuNavegacion">
+                    <div class="navbar-nav me-auto my-2 my-lg-0">
+                        <button class="nav-link btn btn-link activo-nav" id="nav-panel" onclick="navegar('panel')">Panel Financiero</button>
+                        <button class="nav-link btn btn-link" id="nav-movimientos" onclick="navegar('movimientos')">Ingresos y Gastos</button>
+                        <button class="nav-link btn btn-link" id="nav-categorias" onclick="navegar('categorias')">Categorías</button>
+                        <button class="nav-link btn btn-link" id="nav-reportes" onclick="navegar('reportes')">Reportes</button>
+                        <button class="nav-link btn btn-link solo-admin" id="nav-usuarios" onclick="navegar('usuarios')">Usuarios</button>
+                        <button class="nav-link btn btn-link solo-admin" id="nav-bitacora" onclick="navegar('bitacora')">Bitácora</button>
+                    </div>
+
+                    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-secondary border-opacity-25 border-lg-0">
+                        <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-inline-block" onclick="alternarTema()" title="Cambiar modo oscuro/claro">
+                            <span class="icono-tema">🌙</span> <span class="texto-tema">Oscuro</span>
+                        </button>
+                        <span class="navbar-text text-light small me-lg-2" id="info-usuario"></span>
+                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="cerrarSesion()">Cerrar Sesión</button>
+                    </div>
+                </div>
             </div>
         </nav>
 
-        <div class="container py-4">
+        <div class="container py-3 py-md-4">
             <!-- MÓDULO 5: PANEL FINANCIERO -->
             <section id="vista-panel" class="vista-spa vista-activa">
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-                    <h3>Panel Financiero e Indicadores</h3>
-                    <div class="d-flex gap-2 no-print">
-                        <input type="date" id="filtro-inicio" class="form-control form-control-sm" title="Fecha inicio">
-                        <input type="date" id="filtro-fin" class="form-control form-control-sm" title="Fecha fin">
-                        <button class="btn btn-primary btn-sm" onclick="cargarPanel()">Filtrar</button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="limpiarFiltroPanel()">Limpiar</button>
+                <div class="row g-2 align-items-center justify-content-between mb-3">
+                    <div class="col-12 col-lg-auto">
+                        <h3 class="mb-0">Panel Financiero e Indicadores</h3>
+                    </div>
+                    <div class="col-12 col-lg-auto no-print">
+                        <div class="row g-2">
+                            <div class="col-6 col-sm-auto">
+                                <input type="date" id="filtro-inicio" class="form-control form-control-sm" title="Fecha inicio">
+                            </div>
+                            <div class="col-6 col-sm-auto">
+                                <input type="date" id="filtro-fin" class="form-control form-control-sm" title="Fecha fin">
+                            </div>
+                            <div class="col-6 col-sm-auto">
+                                <button class="btn btn-primary btn-sm w-100" onclick="cargarPanel()">Filtrar</button>
+                            </div>
+                            <div class="col-6 col-sm-auto">
+                                <button class="btn btn-outline-secondary btn-sm w-100" onclick="limpiarFiltroPanel()">Limpiar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Tarjetas de Cálculos Financieros -->
                 <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <div class="card card-kpi shadow-sm">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card card-kpi shadow-sm h-100">
                             <div class="card-body">
-                                <h6 class="text-muted">Ingresos Totales</h6>
-                                <h4 class="text-success" id="kpi-ingresos">$0.00</h4>
+                                <h6 class="text-body-secondary">Ingresos Totales</h6>
+                                <h4 class="text-success mb-0" id="kpi-ingresos">$0.00</h4>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card card-kpi shadow-sm" style="border-color:#dc3545;">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card card-kpi shadow-sm h-100" style="border-left-color:#dc3545;">
                             <div class="card-body">
-                                <h6 class="text-muted">Gastos Totales</h6>
-                                <h4 class="text-danger" id="kpi-gastos">$0.00</h4>
+                                <h6 class="text-body-secondary">Gastos Totales</h6>
+                                <h4 class="text-danger mb-0" id="kpi-gastos">$0.00</h4>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card card-kpi shadow-sm" style="border-color:#198754;">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card card-kpi shadow-sm h-100" style="border-left-color:#198754;">
                             <div class="card-body">
-                                <h6 class="text-muted">Resultado Financiero</h6>
-                                <h4 id="kpi-resultado">$0.00</h4>
+                                <h6 class="text-body-secondary">Resultado Financiero</h6>
+                                <h4 class="mb-0" id="kpi-resultado">$0.00</h4>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card card-kpi shadow-sm" style="border-color:#ffc107;">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card card-kpi shadow-sm h-100" style="border-left-color:#ffc107;">
                             <div class="card-body">
-                                <h6 class="text-muted">% de Gastos s/ Ingresos</h6>
-                                <h4 id="kpi-porcentaje">0.00%</h4>
+                                <h6 class="text-body-secondary">% de Gastos s/ Ingresos</h6>
+                                <h4 class="mb-0" id="kpi-porcentaje">0.00%</h4>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card shadow-sm p-3">
+                    <div class="col-12 col-lg-6">
+                        <div class="card shadow-sm p-3 h-100">
                             <h6>Comparativa Ingresos vs. Gastos</h6>
                             <canvas id="graficoBalance"></canvas>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card shadow-sm p-3">
+                    <div class="col-12 col-lg-6">
+                        <div class="card shadow-sm p-3 h-100">
                             <h6>Distribución por Categorías</h6>
                             <canvas id="graficoCategorias"></canvas>
                         </div>
@@ -156,31 +235,31 @@
             <!-- MÓDULOS 2 Y 3: INGRESOS Y GASTOS -->
             <section id="vista-movimientos" class="vista-spa">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 id="titulo-form-movimiento">Registro de Ingresos y Gastos</h3>
+                    <h3 id="titulo-form-movimiento" class="mb-0">Registro de Ingresos y Gastos</h3>
                 </div>
 
-                <form id="form-movimiento" class="row g-3 bg-white p-3 rounded shadow-sm mb-4 no-print">
+                <form id="form-movimiento" class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 no-print mx-0">
                     <input type="hidden" id="mov-id">
-                    <div class="col-md-2">
+                    <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Tipo</label>
                         <select id="mov-tipo" class="form-select" onchange="filtrarCategoriasSelect()" required>
                             <option value="ingreso">Ingreso</option>
                             <option value="gasto">Gasto</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Categoría</label>
                         <select id="mov-categoria" class="form-select" required></select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <label class="form-label">Concepto</label>
                         <input type="text" id="mov-concepto" class="form-control" placeholder="Ej. Pago de alquiler, Venta..." required>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label">Monto ($)</label>
                         <input type="number" id="mov-monto" class="form-control" step="0.01" min="0.01" required>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label">Fecha</label>
                         <input type="date" id="mov-fecha" class="form-control" required>
                     </div>
@@ -190,8 +269,8 @@
                     </div>
                 </form>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                <div class="table-responsive superficie-app rounded shadow-sm">
+                    <table class="table table-striped table-hover mb-0 align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th>Fecha</th>
@@ -210,33 +289,33 @@
 
             <!-- MÓDULO 4: CATEGORÍAS -->
             <section id="vista-categorias" class="vista-spa">
-                <h3>Gestión de Categorías Financieras</h3>
+                <h3 class="mb-3">Gestión de Categorías Financieras</h3>
 
-                <form id="form-categoria" class="row g-3 bg-white p-3 rounded shadow-sm mb-4 solo-admin no-print">
+                <form id="form-categoria" class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 solo-admin no-print mx-0">
                     <input type="hidden" id="cat-id">
-                    <div class="col-md-4">
+                    <div class="col-12 col-md-4">
                         <label class="form-label">Nombre de Categoría</label>
                         <input type="text" id="cat-nombre" class="form-control" placeholder="Ej. Servicios Básicos, Ventas..." required>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Tipo</label>
                         <select id="cat-tipo" class="form-select" required>
                             <option value="ingreso">Ingreso</option>
                             <option value="gasto">Gasto</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Descripción</label>
                         <input type="text" id="cat-descripcion" class="form-control" placeholder="Descripción opcional">
                     </div>
-                    <div class="col-md-2 d-flex align-items-end gap-1">
+                    <div class="col-12 col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" id="btn-guardar-cat" class="btn btn-primary w-100">Guardar</button>
                         <button type="button" id="btn-cancelar-cat" class="btn btn-secondary d-none" onclick="cancelarEdicionCategoria()">✕</button>
                     </div>
                 </form>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                <div class="table-responsive superficie-app rounded shadow-sm">
+                    <table class="table table-striped table-hover mb-0 align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
@@ -255,71 +334,71 @@
             <!-- MÓDULO 6: REPORTES -->
             <section id="vista-reportes" class="vista-spa">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-                    <h3>Reportes Financieros Filtrados</h3>
-                    <div class="d-flex gap-2 no-print">
-                        <div class="btn-group btn-group-sm me-2" role="group" aria-label="Períodos rápidos">
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('diario')">Hoy (Diario)</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('mensual')">Este Mes (Mensual)</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('anual')">Este Año (Anual)</button>
+                    <h3 class="mb-0">Reportes Financieros Filtrados</h3>
+                    <div class="d-flex flex-wrap gap-2 no-print">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Períodos rápidos">
+                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('diario')">Hoy</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('mensual')">Mes</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('anual')">Año</button>
                             <button type="button" class="btn btn-outline-secondary" onclick="aplicarPeriodoReporte('todos')">Todo</button>
                         </div>
-                        <button class="btn btn-success btn-sm" onclick="exportarCSV()">Exportar Excel (CSV)</button>
-                        <button class="btn btn-outline-dark btn-sm" onclick="window.print()">Imprimir / PDF</button>
+                        <button class="btn btn-success btn-sm" onclick="exportarCSV()">Exportar CSV</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">Imprimir / PDF</button>
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3 bg-white p-3 rounded shadow-sm no-print">
-                    <div class="col-md-2">
-                        <label class="form-label small text-muted mb-1">Fecha Inicio</label>
+                <div class="row g-2 mb-3 superficie-app p-3 rounded shadow-sm no-print mx-0">
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small text-body-secondary mb-1">Fecha Inicio</label>
                         <input type="date" id="rep-inicio" class="form-control form-control-sm">
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label small text-muted mb-1">Fecha Fin</label>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small text-body-secondary mb-1">Fecha Fin</label>
                         <input type="date" id="rep-fin" class="form-control form-control-sm">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted mb-1">Tipo de Movimiento</label>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <label class="form-label small text-body-secondary mb-1">Tipo de Movimiento</label>
                         <select id="rep-tipo" class="form-select form-select-sm" onchange="actualizarCategoriasReporte()">
                             <option value="">Todos los tipos</option>
                             <option value="ingreso">Solo Ingresos</option>
                             <option value="gasto">Solo Gastos</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted mb-1">Categoría</label>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <label class="form-label small text-body-secondary mb-1">Categoría</label>
                         <select id="rep-categoria" class="form-select form-select-sm">
                             <option value="">Todas las categorías</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
+                    <div class="col-12 col-md-2 d-flex align-items-end">
                         <button class="btn btn-primary btn-sm w-100" onclick="generarReporte()">Consultar Reporte</button>
                     </div>
                 </div>
 
                 <!-- Resumen del Reporte Consultado -->
                 <div class="row g-2 mb-3">
-                    <div class="col-md-4">
-                        <div class="p-2 bg-white rounded shadow-sm border-start border-4 border-success">
-                            <small class="text-muted d-block">Total Ingresos (Filtro)</small>
+                    <div class="col-12 col-sm-4">
+                        <div class="p-2 superficie-app rounded shadow-sm border-start border-4 border-success">
+                            <small class="text-body-secondary d-block">Total Ingresos (Filtro)</small>
                             <strong class="text-success fs-5" id="rep-total-ingresos">$0.00</strong>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="p-2 bg-white rounded shadow-sm border-start border-4 border-danger">
-                            <small class="text-muted d-block">Total Gastos (Filtro)</small>
+                    <div class="col-12 col-sm-4">
+                        <div class="p-2 superficie-app rounded shadow-sm border-start border-4 border-danger">
+                            <small class="text-body-secondary d-block">Total Gastos (Filtro)</small>
                             <strong class="text-danger fs-5" id="rep-total-gastos">$0.00</strong>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="p-2 bg-white rounded shadow-sm border-start border-4 border-primary">
-                            <small class="text-muted d-block">Balance del Período</small>
+                    <div class="col-12 col-sm-4">
+                        <div class="p-2 superficie-app rounded shadow-sm border-start border-4 border-primary">
+                            <small class="text-body-secondary d-block">Balance del Período</small>
                             <strong class="fs-5" id="rep-total-balance">$0.00</strong>
                         </div>
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped bg-white shadow-sm align-middle">
+                <div class="table-responsive superficie-app rounded shadow-sm">
+                    <table class="table table-bordered table-striped mb-0 align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th>Fecha</th>
@@ -337,36 +416,36 @@
 
             <!-- MÓDULO 1: USUARIOS (SOLO ADMIN) -->
             <section id="vista-usuarios" class="vista-spa">
-                <h3>Administración de Usuarios</h3>
-                <form id="form-usuario" class="row g-3 bg-white p-3 rounded shadow-sm mb-4 no-print">
+                <h3 class="mb-3">Administración de Usuarios</h3>
+                <form id="form-usuario" class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 no-print mx-0">
                     <input type="hidden" id="usr-id">
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Nombre Completo</label>
                         <input type="text" id="usr-nombre" class="form-control" required>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Correo electrónico</label>
                         <input type="email" id="usr-email" class="form-control" required>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Contraseña</label>
                         <input type="password" id="usr-pass" class="form-control" placeholder="Mín. 6 caracteres" required>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Rol</label>
                         <select id="usr-rol" class="form-select" required>
                             <option value="empleado">Empleado</option>
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end gap-1">
+                    <div class="col-12 col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" id="btn-guardar-usr" class="btn btn-primary w-100">Registrar</button>
                         <button type="button" id="btn-cancelar-usr" class="btn btn-secondary d-none" onclick="cancelarEdicionUsuario()">✕</button>
                     </div>
                 </form>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                <div class="table-responsive superficie-app rounded shadow-sm">
+                    <table class="table table-striped table-hover mb-0 align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
@@ -385,11 +464,11 @@
             <!-- MÓDULO 7: BITÁCORA -->
             <section id="vista-bitacora" class="vista-spa">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3>Bitácora de Auditoría y Seguridad</h3>
-                    <button class="btn btn-outline-primary btn-sm no-print" onclick="cargarBitacora()">Actualizar Bitácora</button>
+                    <h3 class="mb-0">Bitácora de Auditoría y Seguridad</h3>
+                    <button class="btn btn-outline-primary btn-sm no-print" onclick="cargarBitacora()">Actualizar</button>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover bg-white shadow-sm align-middle">
+                <div class="table-responsive superficie-app rounded shadow-sm">
+                    <table class="table table-sm table-hover mb-0 align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th>Fecha</th>
@@ -407,6 +486,8 @@
         </div>
     </div>
 
+    <!-- Bootstrap 5.3 JS Bundle (Necesario para el menú hamburguesa) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -425,6 +506,36 @@
         let chartBalance = null, chartCat = null;
         let datosReporteActual = [];
 
+        // GESTIÓN DE MODO OSCURO / CLARO
+        function aplicarTema(tema) {
+            document.documentElement.setAttribute('data-bs-theme', tema);
+            localStorage.setItem('tema_finanzas', tema);
+
+            const esOscuro = tema === 'dark';
+            document.querySelectorAll('.icono-tema').forEach(el => el.textContent = esOscuro ? '☀️' : '🌙');
+            document.querySelectorAll('.texto-tema').forEach(el => el.textContent = esOscuro ? 'Claro' : 'Oscuro');
+            const btnLogin = document.getElementById('btn-tema-login');
+            if (btnLogin) btnLogin.textContent = esOscuro ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+
+            // Ajustar colores de texto y cuadrícula de Chart.js según el tema
+            if (window.Chart) {
+                Chart.defaults.color = esOscuro ? '#cbd5e1' : '#495057';
+                Chart.defaults.borderColor = esOscuro ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                if (chartBalance) chartBalance.update();
+                if (chartCat) chartCat.update();
+            }
+        }
+
+        function alternarTema() {
+            const actual = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            aplicarTema(actual === 'dark' ? 'light' : 'dark');
+        }
+
+        // Inicializar tema guardado o preferencia del sistema
+        const temaGuardado = localStorage.getItem('tema_finanzas') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        aplicarTema(temaGuardado);
+
         // Inicializar fecha por defecto en formulario de movimientos
         document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
 
@@ -442,6 +553,13 @@
 
             const navBtn = document.getElementById(`nav-${vista}`);
             if (navBtn) navBtn.classList.add('activo-nav');
+
+            // Cerrar automáticamente el menú hamburguesa en móviles al elegir una opción
+            const menuColapsable = document.getElementById('menuNavegacion');
+            if (menuColapsable && menuColapsable.classList.contains('show') && window.bootstrap) {
+                const bsCollapse = bootstrap.Collapse.getInstance(menuColapsable) || new bootstrap.Collapse(menuColapsable, { toggle: false });
+                bsCollapse.hide();
+            }
 
             if (vista === 'panel') cargarPanel();
             if (vista === 'movimientos') cargarMovimientos();
@@ -464,12 +582,10 @@
             const res = await fetch(`${API_BASE_URL}${url}`, options);
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-                if (res.status === 401 || res.status === 403) {
-                    if (url !== '/api/auth/login' && res.status === 401) {
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('usuario');
-                        location.reload();
-                    }
+                if (res.status === 401 && url !== '/api/auth/login') {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('usuario');
+                    location.reload();
                 }
                 throw new Error(data.error || 'Error en la petición al servidor');
             }
@@ -501,14 +617,9 @@
             document.getElementById('contenedor-app').classList.remove('d-none');
             document.getElementById('info-usuario').textContent = `${usuario.nombre} (${usuario.rol})`;
 
+            const esAdmin = usuario.rol === 'admin';
             document.querySelectorAll('.solo-admin').forEach(el => {
-                if (el.tagName === 'TH' || el.tagName === 'TD') {
-                    el.style.display = usuario.rol === 'admin' ? 'table-cell' : 'none';
-                } else if (el.tagName === 'FORM') {
-                    el.style.display = usuario.rol === 'admin' ? 'flex' : 'none';
-                } else {
-                    el.style.display = usuario.rol === 'admin' ? 'inline-block' : 'none';
-                }
+                el.classList.toggle('d-none', !esAdmin);
             });
 
             try {
@@ -550,7 +661,7 @@
                 document.getElementById('kpi-gastos').textContent = `$${gastos.toFixed(2)}`;
                 const elRes = document.getElementById('kpi-resultado');
                 elRes.textContent = `$${resultado.toFixed(2)}`;
-                elRes.className = resultado >= 0 ? 'text-primary' : 'text-danger';
+                elRes.className = `mb-0 ${resultado >= 0 ? 'text-primary' : 'text-danger'}`;
                 document.getElementById('kpi-porcentaje').textContent = `${porcentaje.toFixed(2)}%`;
 
                 if (chartBalance) chartBalance.destroy();
@@ -691,13 +802,13 @@
                             <td>${c.id}</td>
                             <td class="fw-semibold">${c.nombre}</td>
                             <td><span class="badge bg-${c.tipo === 'ingreso' ? 'success' : 'danger'}">${c.tipo.toUpperCase()}</span></td>
-                            <td>${c.descripcion || '<span class="text-muted">-</span>'}</td>
+                            <td>${c.descripcion || '<span class="text-body-secondary">-</span>'}</td>
                             <td>
                                 <span class="badge bg-${c.activa !== false ? 'primary' : 'secondary'}">
                                     ${c.activa !== false ? 'Activa' : 'Inactiva'}
                                 </span>
                             </td>
-                            <td class="text-center no-print" style="display: ${esAdmin ? 'table-cell' : 'none'};">
+                            <td class="text-center no-print ${esAdmin ? '' : 'd-none'}">
                                 <button class="btn btn-outline-primary btn-sm me-1" onclick="prepararEdicionCategoria(${c.id})">Editar</button>
                                 <button class="btn btn-outline-${c.activa !== false ? 'warning' : 'success'} btn-sm" onclick="cambiarEstadoCategoria(${c.id}, ${c.activa === false})">
                                     ${c.activa !== false ? 'Desactivar' : 'Activar'}
@@ -878,7 +989,7 @@
                             <td>${u.id}</td>
                             <td class="fw-semibold">${u.nombre}</td>
                             <td>${u.email}</td>
-                            <td><span class="badge bg-${u.rol === 'admin' ? 'dark' : 'info text-dark'}">${u.rol}</span></td>
+                            <td><span class="badge bg-${u.rol === 'admin' ? 'primary' : 'info text-dark'}">${u.rol}</span></td>
                             <td>
                                 <span class="badge bg-${u.activo ? 'success' : 'secondary'}">
                                     ${u.activo ? 'Activo' : 'Inactivo'}
@@ -985,6 +1096,7 @@
         // Exponer todas las funciones necesarias en window para los eventos onclick/onchange del HTML
         Object.assign(window, {
             navegar,
+            alternarTema,
             cargarPanel,
             limpiarFiltroPanel,
             filtrarCategoriasSelect,

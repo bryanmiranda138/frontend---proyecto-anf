@@ -240,7 +240,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module">
         const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-        console.log("Conectando a:", API_BASE_URL);
 
         // 1. Define la URL pública de tu backend desplegado en Render (sin barra diagonal al final)
         let token = localStorage.getItem('token');
@@ -408,6 +407,11 @@
             localStorage.removeItem('token');
             location.reload();
         }
+
+        window.mostrarVista = mostrarVista;       // (reemplaza por el nombre real de tu función de la navbar)
+        window.cambiarSeccion = cambiarSeccion;   // (si se llama así en tu código)
+        window.cerrarSesion = cerrarSesion;       // (la función del botón Cerrar Sesión)
+        window.filtrarDashboard = filtrarDashboard;
     </script>
 </body>
 

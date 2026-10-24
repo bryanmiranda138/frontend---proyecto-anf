@@ -240,13 +240,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-
     <script>
-        // Vite reemplaza %VITE_API_BASE_URL% automáticamente al hacer el build en Vercel
         const rawEnvUrl = '%VITE_API_BASE_URL%';
         const API_BASE_URL = rawEnvUrl.startsWith('http')
             ? rawEnvUrl
-            : 'http://localhost:3000/api'; // <-- Ajusta si tu ruta local lleva /api o no
+            : 'http://localhost:3000/api';
         let token = localStorage.getItem('token');
         let categoriasGlobal = [];
         let chartBalance = null, chartCat = null;

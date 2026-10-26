@@ -7,6 +7,9 @@
     <title>Sistema de Gestión y Control Financiero (SPA)</title>
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons (Iconos minimalistas) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         :root,
         [data-bs-theme="light"] {
@@ -49,36 +52,71 @@
             border-left: 5px solid #0d6efd;
         }
 
-        .nav-link.activo-nav {
-            color: #fff !important;
-            font-weight: 600;
-            border-bottom: 2px solid #0d6efd;
+        /* Estilo minimalista para la Navbar */
+        .navbar-custom {
+            background-color: #111827 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Ajustes para el menú hamburguesa en móviles */
-        @media (max-width: 991.98px) {
-            .navbar-nav .nav-link {
-                text-align: left;
-                padding: 0.6rem 0.75rem;
-                border-bottom: none !important;
-                border-radius: 0.375rem;
-            }
+        .navbar-nav .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #9ca3af !important;
+            padding: 0.45rem 0.85rem !important;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
 
-            .nav-link.activo-nav {
-                background-color: rgba(13, 110, 253, 0.25);
-                border-left: 4px solid #0d6efd;
+        .navbar-nav .nav-link:hover {
+            color: #f3f4f6 !important;
+            background-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .navbar-nav .nav-link.activo-nav {
+            color: #ffffff !important;
+            background-color: #2563eb;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+        }
+
+        .badge-usuario {
+            background-color: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e5e7eb;
+            font-size: 0.82rem;
+            padding: 0.38rem 0.75rem;
+            border-radius: 0.5rem;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 1199.98px) {
+            .navbar-nav .nav-link {
+                width: 100%;
+                padding: 0.65rem 0.9rem !important;
+                margin-bottom: 0.2rem;
             }
         }
 
         @media print {
-            nav, .no-print {
+
+            nav,
+            .no-print {
                 display: none !important;
             }
+
             body {
                 background-color: #fff !important;
                 color: #000 !important;
             }
-            .card, .table, .superficie-app {
+
+            .card,
+            .table,
+            .superficie-app {
                 box-shadow: none !important;
                 background-color: #fff !important;
             }
@@ -93,19 +131,22 @@
         <div class="row justify-content-center">
             <div class="col-11 col-sm-8 col-md-5 col-lg-4">
                 <div class="d-flex justify-content-end mb-2">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alternarTema()" id="btn-tema-login">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alternarTema()"
+                        id="btn-tema-login">
                         🌙 Modo Oscuro
                     </button>
                 </div>
                 <div class="card shadow-sm superficie-app overflow-hidden">
                     <!-- Barra de carga animada (oculta por defecto) -->
                     <div class="progress d-none" id="login-progress" style="height: 4px; border-radius: 0;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated w-100" role="progressbar">
+                        </div>
                     </div>
 
                     <div class="card-body p-4">
                         <div class="text-center mb-3">
-                            <img src="/images/fpc.jpg" alt="Control Financiero" style="max-height: 90px; border-radius: 50%;">
+                            <img src="/images/fpc.jpg" alt="Control Financiero"
+                                style="max-height: 90px; border-radius: 50%;">
                         </div>
                         <h4 class="text-center mb-4">Control Financiero</h4>
                         <form id="form-login">
@@ -117,8 +158,10 @@
                                 <label class="form-label">Contraseña</label>
                                 <input type="password" id="login-pass" class="form-control" required>
                             </div>
-                            <button type="submit" id="btn-login-submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
-                                <span id="login-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <button type="submit" id="btn-login-submit"
+                                class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
+                                <span id="login-spinner" class="spinner-border spinner-border-sm d-none" role="status"
+                                    aria-hidden="true"></span>
                                 <span id="login-text">Iniciar Sesión</span>
                             </button>
                         </form>
@@ -130,52 +173,87 @@
 
     <!-- CONTENEDOR PRINCIPAL SPA (AUTENTICADO) -->
     <div id="contenedor-app" class="d-none">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold d-flex align-items-center" href="#" onclick="navegar('panel'); return false;">
-                    <span class="fs-4 me-2">🏦</span> FinanzasPro SPA
+        <nav class="navbar navbar-expand-xl navbar-dark navbar-custom sticky-top shadow-sm py-2">
+            <div class="container-fluid px-3">
+                <!-- Marca / Logo minimalista -->
+                <a class="navbar-brand fw-semibold d-flex align-items-center gap-2 me-xl-4" href="#"
+                    onclick="navegar('panel'); return false;">
+                    <span
+                        class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-25 text-primary rounded-2 p-1">
+                        <i class="bi bi-wallet2 fs-5"></i>
+                    </span>
+                    <span class="tracking-tight">FinanzasPro <small class="text-secondary fw-normal">SPA</small></span>
                 </a>
 
                 <!-- Controles rápidos en móvil + Botón Hamburguesa -->
-                <div class="d-flex align-items-center gap-2 d-lg-none">
-                    <button type="button" class="btn btn-outline-light btn-sm" onclick="alternarTema()" title="Cambiar tema">
-                        <span class="icono-tema">🌙</span>
+                <div class="d-flex align-items-center gap-2 d-xl-none">
+                    <button type="button"
+                        class="btn btn-outline-secondary btn-sm text-light border-secondary border-opacity-50 d-inline-flex align-items-center"
+                        onclick="alternarTema()" title="Cambiar tema">
+                        <i class="bi bi-moon-stars icono-tema"></i>
                     </button>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir menú">
+                    <button class="navbar-toggler border-secondary border-opacity-50" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion"
+                        aria-expanded="false" aria-label="Abrir menú">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
 
-                <!-- Contenido colapsable del Navbar con ICONOS -->
+                <!-- Contenido colapsable del Navbar -->
                 <div class="collapse navbar-collapse" id="menuNavegacion">
-                    <div class="navbar-nav me-auto my-2 my-lg-0">
-                        <button class="nav-link btn btn-link activo-nav text-start" id="nav-panel" onclick="navegar('panel')">
-                            <span class="me-2">📊</span>Panel Financiero
+                    <!-- Enlaces de navegación -->
+                    <div class="navbar-nav me-auto my-2 my-xl-0 gap-1">
+                        <button class="nav-link btn btn-link activo-nav" id="nav-panel" onclick="navegar('panel')">
+                            <i class="bi bi-grid-1x2"></i>
+                            <span>Panel Financiero</span>
                         </button>
-                        <button class="nav-link btn btn-link text-start" id="nav-movimientos" onclick="navegar('movimientos')">
-                            <span class="me-2">💸</span>Ingresos y Gastos
+                        <button class="nav-link btn btn-link" id="nav-movimientos" onclick="navegar('movimientos')">
+                            <i class="bi bi-arrow-left-right"></i>
+                            <span>Ingresos y Gastos</span>
                         </button>
-                        <button class="nav-link btn btn-link text-start" id="nav-categorias" onclick="navegar('categorias')">
-                            <span class="me-2">📁</span>Categorías
+                        <button class="nav-link btn btn-link" id="nav-categorias" onclick="navegar('categorias')">
+                            <i class="bi bi-tags"></i>
+                            <span>Categorías</span>
                         </button>
-                        <button class="nav-link btn btn-link text-start" id="nav-reportes" onclick="navegar('reportes')">
-                            <span class="me-2">📈</span>Reportes
+                        <button class="nav-link btn btn-link" id="nav-reportes" onclick="navegar('reportes')">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Reportes</span>
                         </button>
-                        <button class="nav-link btn btn-link solo-admin text-start" id="nav-usuarios" onclick="navegar('usuarios')">
-                            <span class="me-2">👥</span>Usuarios
+                        <button class="nav-link btn btn-link solo-admin" id="nav-usuarios"
+                            onclick="navegar('usuarios')">
+                            <i class="bi bi-people"></i>
+                            <span>Usuarios</span>
                         </button>
-                        <button class="nav-link btn btn-link solo-admin text-start" id="nav-bitacora" onclick="navegar('bitacora')">
-                            <span class="me-2">🛡️</span>Bitácora
+                        <button class="nav-link btn btn-link solo-admin" id="nav-bitacora"
+                            onclick="navegar('bitacora')">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Bitácora</span>
                         </button>
                     </div>
 
-                    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-secondary border-opacity-25 border-lg-0">
-                        <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-inline-block" onclick="alternarTema()" title="Cambiar modo oscuro/claro">
-                            <span class="icono-tema">🌙</span> <span class="texto-tema">Oscuro</span>
+                    <!-- Controles de usuario y sesión (Derecha en Web / Abajo en Móvil) -->
+                    <div
+                        class="d-flex flex-column flex-xl-row align-items-stretch align-items-xl-center gap-2 pt-2 pt-xl-0 mt-2 mt-xl-0 border-top border-secondary border-opacity-25 border-xl-0">
+                        <!-- Botón de tema en escritorio -->
+                        <button type="button"
+                            class="btn btn-outline-secondary btn-sm text-light border-secondary border-opacity-50 d-none d-xl-inline-flex align-items-center gap-2 text-nowrap"
+                            onclick="alternarTema()" title="Cambiar modo oscuro/claro">
+                            <i class="bi bi-moon-stars icono-tema"></i>
+                            <span class="texto-tema">Oscuro</span>
                         </button>
-                        <span class="navbar-text text-light small me-lg-2" id="info-usuario"></span>
-                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="cerrarSesion()">
-                            <span class="me-1">🚪</span> Cerrar Sesión
+
+                        <!-- Información del usuario -->
+                        <div class="badge-usuario d-inline-flex align-items-center justify-content-center gap-2">
+                            <i class="bi bi-person-circle text-primary"></i>
+                            <span id="info-usuario"></span>
+                        </div>
+
+                        <!-- Botón Cerrar Sesión -->
+                        <button
+                            class="btn btn-outline-danger btn-sm d-inline-flex align-items-center justify-content-center gap-2 text-nowrap"
+                            onclick="cerrarSesion()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Cerrar Sesión</span>
                         </button>
                     </div>
                 </div>
@@ -192,16 +270,19 @@
                     <div class="col-12 col-lg-auto no-print">
                         <div class="row g-2">
                             <div class="col-6 col-sm-auto">
-                                <input type="date" id="filtro-inicio" class="form-control form-control-sm" title="Fecha inicio">
+                                <input type="date" id="filtro-inicio" class="form-control form-control-sm"
+                                    title="Fecha inicio">
                             </div>
                             <div class="col-6 col-sm-auto">
-                                <input type="date" id="filtro-fin" class="form-control form-control-sm" title="Fecha fin">
+                                <input type="date" id="filtro-fin" class="form-control form-control-sm"
+                                    title="Fecha fin">
                             </div>
                             <div class="col-6 col-sm-auto">
                                 <button class="btn btn-primary btn-sm w-100" onclick="cargarPanel()">Filtrar</button>
                             </div>
                             <div class="col-6 col-sm-auto">
-                                <button class="btn btn-outline-secondary btn-sm w-100" onclick="limpiarFiltroPanel()">Limpiar</button>
+                                <button class="btn btn-outline-secondary btn-sm w-100"
+                                    onclick="limpiarFiltroPanel()">Limpiar</button>
                             </div>
                         </div>
                     </div>
@@ -280,7 +361,8 @@
                     </div>
                     <div class="col-12 col-md-3">
                         <label class="form-label">Concepto</label>
-                        <input type="text" id="mov-concepto" class="form-control" placeholder="Ej. Pago de alquiler, Venta..." required>
+                        <input type="text" id="mov-concepto" class="form-control"
+                            placeholder="Ej. Pago de alquiler, Venta..." required>
                     </div>
                     <div class="col-6 col-md-2">
                         <label class="form-label">Monto ($)</label>
@@ -291,7 +373,8 @@
                         <input type="date" id="mov-fecha" class="form-control" required>
                     </div>
                     <div class="col-12 text-end">
-                        <button type="button" id="btn-cancelar-mov" class="btn btn-secondary d-none me-2" onclick="cancelarEdicionMovimiento()">Cancelar Edición</button>
+                        <button type="button" id="btn-cancelar-mov" class="btn btn-secondary d-none me-2"
+                            onclick="cancelarEdicionMovimiento()">Cancelar Edición</button>
                         <button type="submit" id="btn-guardar-mov" class="btn btn-success">Guardar Movimiento</button>
                     </div>
                 </form>
@@ -318,11 +401,13 @@
             <section id="vista-categorias" class="vista-spa">
                 <h3 class="mb-3">Gestión de Categorías Financieras</h3>
 
-                <form id="form-categoria" class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 solo-admin no-print mx-0">
+                <form id="form-categoria"
+                    class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 solo-admin no-print mx-0">
                     <input type="hidden" id="cat-id">
                     <div class="col-12 col-md-4">
                         <label class="form-label">Nombre de Categoría</label>
-                        <input type="text" id="cat-nombre" class="form-control" placeholder="Ej. Servicios Básicos, Ventas..." required>
+                        <input type="text" id="cat-nombre" class="form-control"
+                            placeholder="Ej. Servicios Básicos, Ventas..." required>
                     </div>
                     <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Tipo</label>
@@ -337,7 +422,8 @@
                     </div>
                     <div class="col-12 col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" id="btn-guardar-cat" class="btn btn-primary w-100">Guardar</button>
-                        <button type="button" id="btn-cancelar-cat" class="btn btn-secondary d-none" onclick="cancelarEdicionCategoria()">✕</button>
+                        <button type="button" id="btn-cancelar-cat" class="btn btn-secondary d-none"
+                            onclick="cancelarEdicionCategoria()">✕</button>
                     </div>
                 </form>
 
@@ -364,13 +450,18 @@
                     <h3 class="mb-0">Reportes Financieros Filtrados</h3>
                     <div class="d-flex flex-wrap gap-2 no-print">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Períodos rápidos">
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('diario')">Hoy</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('mensual')">Mes</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('anual')">Año</button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="aplicarPeriodoReporte('todos')">Todo</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="aplicarPeriodoReporte('diario')">Hoy</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="aplicarPeriodoReporte('mensual')">Mes</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="aplicarPeriodoReporte('anual')">Año</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                onclick="aplicarPeriodoReporte('todos')">Todo</button>
                         </div>
                         <button class="btn btn-success btn-sm" onclick="exportarCSV()">Exportar CSV</button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">Imprimir / PDF</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">Imprimir /
+                            PDF</button>
                     </div>
                 </div>
 
@@ -385,7 +476,8 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label small text-body-secondary mb-1">Tipo de Movimiento</label>
-                        <select id="rep-tipo" class="form-select form-select-sm" onchange="actualizarCategoriasReporte()">
+                        <select id="rep-tipo" class="form-select form-select-sm"
+                            onchange="actualizarCategoriasReporte()">
                             <option value="">Todos los tipos</option>
                             <option value="ingreso">Solo Ingresos</option>
                             <option value="gasto">Solo Gastos</option>
@@ -398,7 +490,8 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-2 d-flex align-items-end">
-                        <button class="btn btn-primary btn-sm w-100" onclick="generarReporte()">Consultar Reporte</button>
+                        <button class="btn btn-primary btn-sm w-100" onclick="generarReporte()">Consultar
+                            Reporte</button>
                     </div>
                 </div>
 
@@ -456,7 +549,8 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Contraseña</label>
-                        <input type="password" id="usr-pass" class="form-control" placeholder="Mín. 6 caracteres" required>
+                        <input type="password" id="usr-pass" class="form-control" placeholder="Mín. 6 caracteres"
+                            required>
                     </div>
                     <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Rol</label>
@@ -467,7 +561,8 @@
                     </div>
                     <div class="col-12 col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" id="btn-guardar-usr" class="btn btn-primary w-100">Registrar</button>
-                        <button type="button" id="btn-cancelar-usr" class="btn btn-secondary d-none" onclick="cancelarEdicionUsuario()">✕</button>
+                        <button type="button" id="btn-cancelar-usr" class="btn btn-secondary d-none"
+                            onclick="cancelarEdicionUsuario()">✕</button>
                     </div>
                 </form>
 
@@ -492,7 +587,8 @@
             <section id="vista-bitacora" class="vista-spa">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3 class="mb-0">Bitácora de Auditoría y Seguridad</h3>
-                    <button class="btn btn-outline-primary btn-sm no-print" onclick="cargarBitacora()">Actualizar</button>
+                    <button class="btn btn-outline-primary btn-sm no-print"
+                        onclick="cargarBitacora()">Actualizar</button>
                 </div>
                 <div class="table-responsive superficie-app rounded shadow-sm">
                     <table class="table table-sm table-hover mb-0 align-middle">
@@ -534,15 +630,25 @@
         let datosReporteActual = [];
 
         // GESTIÓN DE MODO OSCURO / CLARO
+        // 1. Reemplaza la función aplicarTema(tema) por esta:
         function aplicarTema(tema) {
             document.documentElement.setAttribute('data-bs-theme', tema);
             localStorage.setItem('tema_finanzas', tema);
 
             const esOscuro = tema === 'dark';
-            document.querySelectorAll('.icono-tema').forEach(el => el.textContent = esOscuro ? '☀️' : '🌙');
-            document.querySelectorAll('.texto-tema').forEach(el => el.textContent = esOscuro ? 'Claro' : 'Oscuro');
+            document.querySelectorAll('.icono-tema').forEach(el => {
+                el.className = `bi ${esOscuro ? 'bi-sun' : 'bi-moon-stars'} icono-tema`;
+            });
+            document.querySelectorAll('.texto-tema').forEach(el => {
+                el.textContent = esOscuro ? 'Claro' : 'Oscuro';
+            });
+
             const btnLogin = document.getElementById('btn-tema-login');
-            if (btnLogin) btnLogin.textContent = esOscuro ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+            if (btnLogin) {
+                btnLogin.innerHTML = esOscuro
+                    ? '<i class="bi bi-sun me-1"></i> Modo Claro'
+                    : '<i class="bi bi-moon-stars me-1"></i> Modo Oscuro';
+            }
 
             if (window.Chart) {
                 Chart.defaults.color = esOscuro ? '#cbd5e1' : '#495057';
@@ -661,7 +767,8 @@
         async function iniciarApp(usuario) {
             document.getElementById('vista-login').classList.add('d-none');
             document.getElementById('contenedor-app').classList.remove('d-none');
-            document.getElementById('info-usuario').textContent = `👤 ${usuario.nombre} (${usuario.rol})`;
+            // Dentro de iniciarApp(usuario), deja esta línea así:
+            document.getElementById('info-usuario').textContent = `${usuario.nombre} (${usuario.rol})`;
 
             const esAdmin = usuario.rol === 'admin';
             document.querySelectorAll('.solo-admin').forEach(el => {
@@ -679,7 +786,7 @@
         }
 
         async function cerrarSesion() {
-            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             location.reload();

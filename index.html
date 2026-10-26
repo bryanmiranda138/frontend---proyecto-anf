@@ -144,306 +144,317 @@
     </div>
 
     <!-- CONTENEDOR PRINCIPAL SPA (AUTENTICADO) -->
-<div id="contenedor-app" class="d-none">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-        <div class="container-fluid">
-            <!-- Icono en el logo -->
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="#" onclick="navegar('panel'); return false;">
-                <span class="fs-4 me-2">🏦</span> FinanzasPro SPA
-            </a>
-            
-            <!-- Controles rápidos en móvil + Botón Hamburguesa -->
-            <div class="d-flex align-items-center gap-2 d-lg-none">
-                <button type="button" class="btn btn-outline-light btn-sm" onclick="alternarTema()" title="Cambiar tema">
-                    <span class="icono-tema">🌙</span>
-                </button>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir menú">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
+    <div id="contenedor-app" class="d-none">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+            <div class="container-fluid">
+                <!-- Icono en el logo -->
+                <a class="navbar-brand fw-bold d-flex align-items-center" href="#"
+                    onclick="navegar('panel'); return false;">
+                    <span class="fs-4 me-2">🏦</span> FinanzasPro SPA
+                </a>
 
-            <!-- Contenido colapsable del Navbar con ICONOS -->
-            <div class="collapse navbar-collapse" id="menuNavegacion">
-                <div class="navbar-nav me-auto my-2 my-lg-0">
-                    <button class="nav-link btn btn-link activo-nav text-start" id="nav-panel" onclick="navegar('panel')">
-                        <span class="me-2">📊</span>Panel Financiero
+                <!-- Controles rápidos en móvil + Botón Hamburguesa -->
+                <div class="d-flex align-items-center gap-2 d-lg-none">
+                    <button type="button" class="btn btn-outline-light btn-sm" onclick="alternarTema()"
+                        title="Cambiar tema">
+                        <span class="icono-tema">🌙</span>
                     </button>
-                    <button class="nav-link btn btn-link text-start" id="nav-movimientos" onclick="navegar('movimientos')">
-                        <span class="me-2">💸</span>Ingresos y Gastos
-                    </button>
-                    <button class="nav-link btn btn-link text-start" id="nav-categorias" onclick="navegar('categorias')">
-                        <span class="me-2">📁</span>Categorías
-                    </button>
-                    <button class="nav-link btn btn-link text-start" id="nav-reportes" onclick="navegar('reportes')">
-                        <span class="me-2">📈</span>Reportes
-                    </button>
-                    <button class="nav-link btn btn-link solo-admin text-start" id="nav-usuarios" onclick="navegar('usuarios')">
-                        <span class="me-2">👥</span>Usuarios
-                    </button>
-                    <button class="nav-link btn btn-link solo-admin text-start" id="nav-bitacora" onclick="navegar('bitacora')">
-                        <span class="me-2">🛡️</span>Bitácora
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false"
+                        aria-label="Abrir menú">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
 
-                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-secondary border-opacity-25 border-lg-0">
-                    <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-inline-block" onclick="alternarTema()" title="Cambiar modo oscuro/claro">
-                        <span class="icono-tema">🌙</span> <span class="texto-tema">Oscuro</span>
-                    </button>
-                    <span class="navbar-text text-light small me-lg-2" id="info-usuario">
-                        <span class="me-1">👤</span> <!-- Aquí va el nombre dinámico desde JS -->
-                    </span>
-                    <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="cerrarSesion()">
-                        <span class="me-1">🚪</span> Cerrar Sesión
-                    </button>
+                <!-- Contenido colapsable del Navbar con ICONOS -->
+                <div class="collapse navbar-collapse" id="menuNavegacion">
+                    <div class="navbar-nav me-auto my-2 my-lg-0">
+                        <button class="nav-link btn btn-link activo-nav text-start" id="nav-panel"
+                            onclick="navegar('panel')">
+                            <span class="me-2">📊</span>Panel Financiero
+                        </button>
+                        <button class="nav-link btn btn-link text-start" id="nav-movimientos"
+                            onclick="navegar('movimientos')">
+                            <span class="me-2">💸</span>Ingresos y Gastos
+                        </button>
+                        <button class="nav-link btn btn-link text-start" id="nav-categorias"
+                            onclick="navegar('categorias')">
+                            <span class="me-2">📁</span>Categorías
+                        </button>
+                        <button class="nav-link btn btn-link text-start" id="nav-reportes"
+                            onclick="navegar('reportes')">
+                            <span class="me-2">📈</span>Reportes
+                        </button>
+                        <button class="nav-link btn btn-link solo-admin text-start" id="nav-usuarios"
+                            onclick="navegar('usuarios')">
+                            <span class="me-2">👥</span>Usuarios
+                        </button>
+                        <button class="nav-link btn btn-link solo-admin text-start" id="nav-bitacora"
+                            onclick="navegar('bitacora')">
+                            <span class="me-2">🛡️</span>Bitácora
+                        </button>
+                    </div>
+
+                    <div
+                        class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-secondary border-opacity-25 border-lg-0">
+                        <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-inline-block"
+                            onclick="alternarTema()" title="Cambiar modo oscuro/claro">
+                            <span class="icono-tema">🌙</span> <span class="texto-tema">Oscuro</span>
+                        </button>
+                        <span class="navbar-text text-light small me-lg-2" id="info-usuario">
+                            <span class="me-1">👤</span> <!-- Aquí va el nombre dinámico desde JS -->
+                        </span>
+                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="cerrarSesion()">
+                            <span class="me-1">🚪</span> Cerrar Sesión
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Bootstrap 5.3 JS Bundle (Necesario para el menú hamburguesa) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Bootstrap 5.3 JS Bundle (Necesario para el menú hamburguesa) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script>
-        // Configuración de URL Base compatible con Vite (Vercel) y entorno local
-        const rawEnvUrl = '%VITE_API_BASE_URL%';
-        const API_BASE_URL = (rawEnvUrl.startsWith('http') ? rawEnvUrl : 'http://localhost:3000')
-            .replace(/\/+$/, '')
-            .replace(/\/api$/, '');
+        <script>
+            // Configuración de URL Base compatible con Vite (Vercel) y entorno local
+            const rawEnvUrl = '%VITE_API_BASE_URL%';
+            const API_BASE_URL = (rawEnvUrl.startsWith('http') ? rawEnvUrl : 'http://localhost:3000')
+                .replace(/\/+$/, '')
+                .replace(/\/api$/, '');
 
-        let token = localStorage.getItem('token');
-        let usuarioActual = JSON.parse(localStorage.getItem('usuario') || 'null');
-        let categoriasGlobal = [];
-        let movimientosGlobal = [];
-        let usuariosGlobal = [];
-        let chartBalance = null, chartCat = null;
-        let datosReporteActual = [];
+            let token = localStorage.getItem('token');
+            let usuarioActual = JSON.parse(localStorage.getItem('usuario') || 'null');
+            let categoriasGlobal = [];
+            let movimientosGlobal = [];
+            let usuariosGlobal = [];
+            let chartBalance = null, chartCat = null;
+            let datosReporteActual = [];
 
-        // GESTIÓN DE MODO OSCURO / CLARO
-        function aplicarTema(tema) {
-            document.documentElement.setAttribute('data-bs-theme', tema);
-            localStorage.setItem('tema_finanzas', tema);
+            // GESTIÓN DE MODO OSCURO / CLARO
+            function aplicarTema(tema) {
+                document.documentElement.setAttribute('data-bs-theme', tema);
+                localStorage.setItem('tema_finanzas', tema);
 
-            const esOscuro = tema === 'dark';
-            document.querySelectorAll('.icono-tema').forEach(el => el.textContent = esOscuro ? '☀️' : '🌙');
-            document.querySelectorAll('.texto-tema').forEach(el => el.textContent = esOscuro ? 'Claro' : 'Oscuro');
-            const btnLogin = document.getElementById('btn-tema-login');
-            if (btnLogin) btnLogin.textContent = esOscuro ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+                const esOscuro = tema === 'dark';
+                document.querySelectorAll('.icono-tema').forEach(el => el.textContent = esOscuro ? '☀️' : '🌙');
+                document.querySelectorAll('.texto-tema').forEach(el => el.textContent = esOscuro ? 'Claro' : 'Oscuro');
+                const btnLogin = document.getElementById('btn-tema-login');
+                if (btnLogin) btnLogin.textContent = esOscuro ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
 
-            // Ajustar colores de texto y cuadrícula de Chart.js según el tema
-            if (window.Chart) {
-                Chart.defaults.color = esOscuro ? '#cbd5e1' : '#495057';
-                Chart.defaults.borderColor = esOscuro ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-                if (chartBalance) chartBalance.update();
-                if (chartCat) chartCat.update();
-            }
-        }
-
-        function alternarTema() {
-            const actual = document.documentElement.getAttribute('data-bs-theme') || 'light';
-            aplicarTema(actual === 'dark' ? 'light' : 'dark');
-        }
-
-        // Inicializar tema guardado o preferencia del sistema
-        const temaGuardado = localStorage.getItem('tema_finanzas') ||
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        aplicarTema(temaGuardado);
-
-        // Inicializar fecha por defecto en formulario de movimientos
-        document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
-
-        // FUNCIÓN DE NAVEGACIÓN SPA
-        function navegar(vista) {
-            document.querySelectorAll('.vista-spa').forEach(sec => {
-                sec.classList.remove('vista-activa');
-            });
-            document.querySelectorAll('.navbar-nav .nav-link').forEach(btn => {
-                btn.classList.remove('activo-nav');
-            });
-
-            const seccionActiva = document.getElementById(`vista-${vista}`);
-            if (seccionActiva) seccionActiva.classList.add('vista-activa');
-
-            const navBtn = document.getElementById(`nav-${vista}`);
-            if (navBtn) navBtn.classList.add('activo-nav');
-
-            // Cerrar automáticamente el menú hamburguesa en móviles al elegir una opción
-            const menuColapsable = document.getElementById('menuNavegacion');
-            if (menuColapsable && menuColapsable.classList.contains('show') && window.bootstrap) {
-                const bsCollapse = bootstrap.Collapse.getInstance(menuColapsable) || new bootstrap.Collapse(menuColapsable, { toggle: false });
-                bsCollapse.hide();
-            }
-
-            if (vista === 'panel') cargarPanel();
-            if (vista === 'movimientos') cargarMovimientos();
-            if (vista === 'categorias') cargarCategorias();
-            if (vista === 'reportes') {
-                actualizarCategoriasReporte();
-                generarReporte();
-            }
-            if (vista === 'usuarios') cargarUsuarios();
-            if (vista === 'bitacora') cargarBitacora();
-        }
-
-        // Helper para peticiones HTTP autenticadas
-        async function apiFetch(url, options = {}) {
-            options.headers = {
-                ...options.headers,
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            };
-            const res = await fetch(`${API_BASE_URL}${url}`, options);
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) {
-                if (res.status === 401 && url !== '/api/auth/login') {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('usuario');
-                    location.reload();
+                // Ajustar colores de texto y cuadrícula de Chart.js según el tema
+                if (window.Chart) {
+                    Chart.defaults.color = esOscuro ? '#cbd5e1' : '#495057';
+                    Chart.defaults.borderColor = esOscuro ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                    if (chartBalance) chartBalance.update();
+                    if (chartCat) chartCat.update();
                 }
-                throw new Error(data.error || 'Error en la petición al servidor');
             }
-            return data;
-        }
 
-        // MÓDULO 1: LOGIN Y SESIÓN
-        document.getElementById('form-login').addEventListener('submit', async (e) => {
-            e.preventDefault();
+            function alternarTema() {
+                const actual = document.documentElement.getAttribute('data-bs-theme') || 'light';
+                aplicarTema(actual === 'dark' ? 'light' : 'dark');
+            }
 
-            // Elementos de la interfaz de carga
-            const btnSubmit = document.getElementById('btn-login-submit');
-            const loginText = document.getElementById('login-text');
-            const loginSpinner = document.getElementById('login-spinner');
-            const loginProgress = document.getElementById('login-progress');
+            // Inicializar tema guardado o preferencia del sistema
+            const temaGuardado = localStorage.getItem('tema_finanzas') ||
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            aplicarTema(temaGuardado);
 
-            // 1. Activar estado de carga (bloquear botón y mostrar animaciones)
-            btnSubmit.disabled = true;
-            loginText.textContent = 'Iniciando...';
-            loginSpinner.classList.remove('d-none');
-            loginProgress.classList.remove('d-none');
+            // Inicializar fecha por defecto en formulario de movimientos
+            document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
 
-            try {
-                const email = document.getElementById('login-email').value.trim();
-                const password = document.getElementById('login-pass').value;
-
-                const data = await apiFetch('/api/auth/login', {
-                    method: 'POST',
-                    body: JSON.stringify({ email, password })
+            // FUNCIÓN DE NAVEGACIÓN SPA
+            function navegar(vista) {
+                document.querySelectorAll('.vista-spa').forEach(sec => {
+                    sec.classList.remove('vista-activa');
+                });
+                document.querySelectorAll('.navbar-nav .nav-link').forEach(btn => {
+                    btn.classList.remove('activo-nav');
                 });
 
-                token = data.token;
-                usuarioActual = data.usuario;
-                localStorage.setItem('token', token);
-                localStorage.setItem('usuario', JSON.stringify(usuarioActual));
+                const seccionActiva = document.getElementById(`vista-${vista}`);
+                if (seccionActiva) seccionActiva.classList.add('vista-activa');
 
-                iniciarApp(usuarioActual);
-            } catch (err) {
-                alert(err.message);
-            } finally {
-                // 2. Restaurar el botón en caso de error (o al finalizar)
-                btnSubmit.disabled = false;
-                loginText.textContent = 'Iniciar Sesión';
-                loginSpinner.classList.add('d-none');
-                loginProgress.classList.add('d-none');
+                const navBtn = document.getElementById(`nav-${vista}`);
+                if (navBtn) navBtn.classList.add('activo-nav');
+
+                // Cerrar automáticamente el menú hamburguesa en móviles al elegir una opción
+                const menuColapsable = document.getElementById('menuNavegacion');
+                if (menuColapsable && menuColapsable.classList.contains('show') && window.bootstrap) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(menuColapsable) || new bootstrap.Collapse(menuColapsable, { toggle: false });
+                    bsCollapse.hide();
+                }
+
+                if (vista === 'panel') cargarPanel();
+                if (vista === 'movimientos') cargarMovimientos();
+                if (vista === 'categorias') cargarCategorias();
+                if (vista === 'reportes') {
+                    actualizarCategoriasReporte();
+                    generarReporte();
+                }
+                if (vista === 'usuarios') cargarUsuarios();
+                if (vista === 'bitacora') cargarBitacora();
             }
-        });
 
-        async function iniciarApp(usuario) {
-            document.getElementById('vista-login').classList.add('d-none');
-            document.getElementById('contenedor-app').classList.remove('d-none');
-            document.getElementById('info-usuario').textContent = `${usuario.nombre} (${usuario.rol})`;
+            // Helper para peticiones HTTP autenticadas
+            async function apiFetch(url, options = {}) {
+                options.headers = {
+                    ...options.headers,
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                };
+                const res = await fetch(`${API_BASE_URL}${url}`, options);
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    if (res.status === 401 && url !== '/api/auth/login') {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('usuario');
+                        location.reload();
+                    }
+                    throw new Error(data.error || 'Error en la petición al servidor');
+                }
+                return data;
+            }
 
-            const esAdmin = usuario.rol === 'admin';
-            document.querySelectorAll('.solo-admin').forEach(el => {
-                el.classList.toggle('d-none', !esAdmin);
+            // MÓDULO 1: LOGIN Y SESIÓN (Versión segura a prueba de fallos)
+            document.getElementById('form-login').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const btnSubmit = document.getElementById('btn-login-submit') || e.target.querySelector('button[type="submit"]');
+                const loginText = document.getElementById('login-text');
+                const loginSpinner = document.getElementById('login-spinner');
+                const loginProgress = document.getElementById('login-progress');
+
+                // Activar estado de carga de forma segura
+                if (btnSubmit) btnSubmit.disabled = true;
+                if (loginText) loginText.textContent = 'Iniciando...';
+                if (loginSpinner) loginSpinner.classList.remove('d-none');
+                if (loginProgress) loginProgress.classList.remove('d-none');
+
+                try {
+                    const email = document.getElementById('login-email').value.trim();
+                    const password = document.getElementById('login-pass').value;
+
+                    const data = await apiFetch('/api/auth/login', {
+                        method: 'POST',
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    token = data.token;
+                    usuarioActual = data.usuario;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('usuario', JSON.stringify(usuarioActual));
+
+                    iniciarApp(usuarioActual);
+                } catch (err) {
+                    alert(err.message);
+                } finally {
+                    // Restaurar controles siempre, incluso si hubo error
+                    if (btnSubmit) btnSubmit.disabled = false;
+                    if (loginText) loginText.textContent = 'Iniciar Sesión';
+                    if (loginSpinner) loginSpinner.classList.add('d-none');
+                    if (loginProgress) loginProgress.classList.add('d-none');
+                }
             });
 
-            try {
-                categoriasGlobal = await apiFetch('/api/categorias');
-                filtrarCategoriasSelect();
-                actualizarCategoriasReporte();
-                await cargarPanel();
-            } catch (err) {
-                console.error('Error al inicializar datos:', err);
-            }
-        }
+            async function iniciarApp(usuario) {
+                document.getElementById('vista-login').classList.add('d-none');
+                document.getElementById('contenedor-app').classList.remove('d-none');
+                document.getElementById('info-usuario').textContent = `${usuario.nombre} (${usuario.rol})`;
 
-        async function cerrarSesion() {
-            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            location.reload();
-        }
-
-        // MÓDULO 5: PANEL FINANCIERO E INDICADORES
-        function limpiarFiltroPanel() {
-            document.getElementById('filtro-inicio').value = '';
-            document.getElementById('filtro-fin').value = '';
-            cargarPanel();
-        }
-
-        async function cargarPanel() {
-            try {
-                const inicio = document.getElementById('filtro-inicio').value;
-                const fin = document.getElementById('filtro-fin').value;
-                const data = await apiFetch(`/api/finanzas/resumen?fechaInicio=${inicio}&fechaFin=${fin}`);
-
-                const ingresos = Number(data.ingresosTotales || 0);
-                const gastos = Number(data.gastosTotales || 0);
-                const resultado = Number(data.resultadoFinanciero || 0);
-                const porcentaje = Number(data.porcentajeGastos || 0);
-
-                document.getElementById('kpi-ingresos').textContent = `$${ingresos.toFixed(2)}`;
-                document.getElementById('kpi-gastos').textContent = `$${gastos.toFixed(2)}`;
-                const elRes = document.getElementById('kpi-resultado');
-                elRes.textContent = `$${resultado.toFixed(2)}`;
-                elRes.className = `mb-0 ${resultado >= 0 ? 'text-primary' : 'text-danger'}`;
-                document.getElementById('kpi-porcentaje').textContent = `${porcentaje.toFixed(2)}%`;
-
-                if (chartBalance) chartBalance.destroy();
-                chartBalance = new Chart(document.getElementById('graficoBalance'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['Ingresos Totales', 'Gastos Totales', 'Resultado Financiero'],
-                        datasets: [{
-                            label: 'USD ($)',
-                            data: [ingresos, gastos, resultado],
-                            backgroundColor: ['#198754', '#dc3545', '#0d6efd']
-                        }]
-                    }
+                const esAdmin = usuario.rol === 'admin';
+                document.querySelectorAll('.solo-admin').forEach(el => {
+                    el.classList.toggle('d-none', !esAdmin);
                 });
 
-                if (chartCat) chartCat.destroy();
-                const desglose = data.desgloseCategorias || [];
-                chartCat = new Chart(document.getElementById('graficoCategorias'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: desglose.map(d => `${d.categoria} (${d.tipo})`),
-                        datasets: [{
-                            data: desglose.map(d => Number(d.total)),
-                            backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#198754', '#20c997']
-                        }]
-                    }
-                });
-            } catch (err) {
-                alert(err.message);
+                try {
+                    categoriasGlobal = await apiFetch('/api/categorias');
+                    filtrarCategoriasSelect();
+                    actualizarCategoriasReporte();
+                    await cargarPanel();
+                } catch (err) {
+                    console.error('Error al inicializar datos:', err);
+                }
             }
-        }
 
-        // MÓDULOS 2 Y 3: INGRESOS Y GASTOS (MOVIMIENTOS)
-        function filtrarCategoriasSelect() {
-            const tipo = document.getElementById('mov-tipo').value;
-            const select = document.getElementById('mov-categoria');
-            const disponibles = categoriasGlobal.filter(c => c.tipo === tipo && c.activa !== false);
-            select.innerHTML = disponibles.length
-                ? disponibles.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('')
-                : '<option value="">Sin categorías activas</option>';
-        }
+            async function cerrarSesion() {
+                await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
+                localStorage.removeItem('token');
+                localStorage.removeItem('usuario');
+                location.reload();
+            }
 
-        async function cargarMovimientos() {
-            try {
-                movimientosGlobal = await apiFetch('/api/movimientos');
-                document.getElementById('tabla-movimientos').innerHTML = movimientosGlobal.map(m => `
+            // MÓDULO 5: PANEL FINANCIERO E INDICADORES
+            function limpiarFiltroPanel() {
+                document.getElementById('filtro-inicio').value = '';
+                document.getElementById('filtro-fin').value = '';
+                cargarPanel();
+            }
+
+            async function cargarPanel() {
+                try {
+                    const inicio = document.getElementById('filtro-inicio').value;
+                    const fin = document.getElementById('filtro-fin').value;
+                    const data = await apiFetch(`/api/finanzas/resumen?fechaInicio=${inicio}&fechaFin=${fin}`);
+
+                    const ingresos = Number(data.ingresosTotales || 0);
+                    const gastos = Number(data.gastosTotales || 0);
+                    const resultado = Number(data.resultadoFinanciero || 0);
+                    const porcentaje = Number(data.porcentajeGastos || 0);
+
+                    document.getElementById('kpi-ingresos').textContent = `$${ingresos.toFixed(2)}`;
+                    document.getElementById('kpi-gastos').textContent = `$${gastos.toFixed(2)}`;
+                    const elRes = document.getElementById('kpi-resultado');
+                    elRes.textContent = `$${resultado.toFixed(2)}`;
+                    elRes.className = `mb-0 ${resultado >= 0 ? 'text-primary' : 'text-danger'}`;
+                    document.getElementById('kpi-porcentaje').textContent = `${porcentaje.toFixed(2)}%`;
+
+                    if (chartBalance) chartBalance.destroy();
+                    chartBalance = new Chart(document.getElementById('graficoBalance'), {
+                        type: 'bar',
+                        data: {
+                            labels: ['Ingresos Totales', 'Gastos Totales', 'Resultado Financiero'],
+                            datasets: [{
+                                label: 'USD ($)',
+                                data: [ingresos, gastos, resultado],
+                                backgroundColor: ['#198754', '#dc3545', '#0d6efd']
+                            }]
+                        }
+                    });
+
+                    if (chartCat) chartCat.destroy();
+                    const desglose = data.desgloseCategorias || [];
+                    chartCat = new Chart(document.getElementById('graficoCategorias'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: desglose.map(d => `${d.categoria} (${d.tipo})`),
+                            datasets: [{
+                                data: desglose.map(d => Number(d.total)),
+                                backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#198754', '#20c997']
+                            }]
+                        }
+                    });
+                } catch (err) {
+                    alert(err.message);
+                }
+            }
+
+            // MÓDULOS 2 Y 3: INGRESOS Y GASTOS (MOVIMIENTOS)
+            function filtrarCategoriasSelect() {
+                const tipo = document.getElementById('mov-tipo').value;
+                const select = document.getElementById('mov-categoria');
+                const disponibles = categoriasGlobal.filter(c => c.tipo === tipo && c.activa !== false);
+                select.innerHTML = disponibles.length
+                    ? disponibles.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('')
+                    : '<option value="">Sin categorías activas</option>';
+            }
+
+            async function cargarMovimientos() {
+                try {
+                    movimientosGlobal = await apiFetch('/api/movimientos');
+                    document.getElementById('tabla-movimientos').innerHTML = movimientosGlobal.map(m => `
                     <tr>
                         <td>${m.fecha}</td>
                         <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
@@ -456,84 +467,84 @@
                         </td>
                     </tr>
                 `).join('');
-            } catch (err) {
-                alert(err.message);
-            }
-        }
-
-        function prepararEdicionMovimiento(id) {
-            const mov = movimientosGlobal.find(m => m.id === id);
-            if (!mov) return;
-
-            document.getElementById('mov-id').value = mov.id;
-            document.getElementById('mov-tipo').value = mov.tipo;
-            filtrarCategoriasSelect();
-            document.getElementById('mov-categoria').value = mov.categoria_id;
-            document.getElementById('mov-concepto').value = mov.concepto;
-            document.getElementById('mov-monto').value = Number(mov.monto);
-            document.getElementById('mov-fecha').value = mov.fecha;
-
-            document.getElementById('titulo-form-movimiento').textContent = `Editando Movimiento #${mov.id}`;
-            const btnGuardar = document.getElementById('btn-guardar-mov');
-            btnGuardar.textContent = 'Actualizar Movimiento';
-            btnGuardar.classList.replace('btn-success', 'btn-primary');
-            document.getElementById('btn-cancelar-mov').classList.remove('d-none');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function cancelarEdicionMovimiento() {
-            document.getElementById('form-movimiento').reset();
-            document.getElementById('mov-id').value = '';
-            document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
-            filtrarCategoriasSelect();
-
-            document.getElementById('titulo-form-movimiento').textContent = 'Registro de Ingresos y Gastos';
-            const btnGuardar = document.getElementById('btn-guardar-mov');
-            btnGuardar.textContent = 'Guardar Movimiento';
-            btnGuardar.classList.replace('btn-primary', 'btn-success');
-            document.getElementById('btn-cancelar-mov').classList.add('d-none');
-        }
-
-        document.getElementById('form-movimiento').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const idEdicion = document.getElementById('mov-id').value;
-            const payload = {
-                tipo: document.getElementById('mov-tipo').value,
-                categoria_id: document.getElementById('mov-categoria').value,
-                concepto: document.getElementById('mov-concepto').value.trim(),
-                monto: Number(document.getElementById('mov-monto').value),
-                fecha: document.getElementById('mov-fecha').value
-            };
-
-            try {
-                if (idEdicion) {
-                    await apiFetch(`/api/movimientos/${idEdicion}`, {
-                        method: 'PUT',
-                        body: JSON.stringify(payload)
-                    });
-                } else {
-                    await apiFetch('/api/movimientos', {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    });
+                } catch (err) {
+                    alert(err.message);
                 }
-                cancelarEdicionMovimiento();
-                cargarMovimientos();
-            } catch (err) {
-                alert(err.message);
             }
-        });
 
-        // MÓDULO 4: CATEGORÍAS FINANCIERAS
-        async function cargarCategorias() {
-            try {
-                categoriasGlobal = await apiFetch('/api/categorias');
+            function prepararEdicionMovimiento(id) {
+                const mov = movimientosGlobal.find(m => m.id === id);
+                if (!mov) return;
+
+                document.getElementById('mov-id').value = mov.id;
+                document.getElementById('mov-tipo').value = mov.tipo;
                 filtrarCategoriasSelect();
-                actualizarCategoriasReporte();
-                const esAdmin = usuarioActual && usuarioActual.rol === 'admin';
-                const tbody = document.getElementById('tabla-categorias');
-                if (tbody) {
-                    tbody.innerHTML = categoriasGlobal.map(c => `
+                document.getElementById('mov-categoria').value = mov.categoria_id;
+                document.getElementById('mov-concepto').value = mov.concepto;
+                document.getElementById('mov-monto').value = Number(mov.monto);
+                document.getElementById('mov-fecha').value = mov.fecha;
+
+                document.getElementById('titulo-form-movimiento').textContent = `Editando Movimiento #${mov.id}`;
+                const btnGuardar = document.getElementById('btn-guardar-mov');
+                btnGuardar.textContent = 'Actualizar Movimiento';
+                btnGuardar.classList.replace('btn-success', 'btn-primary');
+                document.getElementById('btn-cancelar-mov').classList.remove('d-none');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function cancelarEdicionMovimiento() {
+                document.getElementById('form-movimiento').reset();
+                document.getElementById('mov-id').value = '';
+                document.getElementById('mov-fecha').value = new Date().toISOString().slice(0, 10);
+                filtrarCategoriasSelect();
+
+                document.getElementById('titulo-form-movimiento').textContent = 'Registro de Ingresos y Gastos';
+                const btnGuardar = document.getElementById('btn-guardar-mov');
+                btnGuardar.textContent = 'Guardar Movimiento';
+                btnGuardar.classList.replace('btn-primary', 'btn-success');
+                document.getElementById('btn-cancelar-mov').classList.add('d-none');
+            }
+
+            document.getElementById('form-movimiento').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const idEdicion = document.getElementById('mov-id').value;
+                const payload = {
+                    tipo: document.getElementById('mov-tipo').value,
+                    categoria_id: document.getElementById('mov-categoria').value,
+                    concepto: document.getElementById('mov-concepto').value.trim(),
+                    monto: Number(document.getElementById('mov-monto').value),
+                    fecha: document.getElementById('mov-fecha').value
+                };
+
+                try {
+                    if (idEdicion) {
+                        await apiFetch(`/api/movimientos/${idEdicion}`, {
+                            method: 'PUT',
+                            body: JSON.stringify(payload)
+                        });
+                    } else {
+                        await apiFetch('/api/movimientos', {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                    }
+                    cancelarEdicionMovimiento();
+                    cargarMovimientos();
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+
+            // MÓDULO 4: CATEGORÍAS FINANCIERAS
+            async function cargarCategorias() {
+                try {
+                    categoriasGlobal = await apiFetch('/api/categorias');
+                    filtrarCategoriasSelect();
+                    actualizarCategoriasReporte();
+                    const esAdmin = usuarioActual && usuarioActual.rol === 'admin';
+                    const tbody = document.getElementById('tabla-categorias');
+                    if (tbody) {
+                        tbody.innerHTML = categoriasGlobal.map(c => `
                         <tr>
                             <td>${c.id}</td>
                             <td class="fw-semibold">${c.nombre}</td>
@@ -552,133 +563,133 @@
                             </td>
                         </tr>
                     `).join('');
+                    }
+                } catch (err) {
+                    alert(err.message);
                 }
-            } catch (err) {
-                alert(err.message);
             }
-        }
 
-        function prepararEdicionCategoria(id) {
-            const cat = categoriasGlobal.find(c => c.id === id);
-            if (!cat) return;
-            document.getElementById('cat-id').value = cat.id;
-            document.getElementById('cat-nombre').value = cat.nombre;
-            document.getElementById('cat-tipo').value = cat.tipo;
-            document.getElementById('cat-descripcion').value = cat.descripcion || '';
-            document.getElementById('btn-guardar-cat').textContent = 'Actualizar';
-            document.getElementById('btn-cancelar-cat').classList.remove('d-none');
-        }
-
-        function cancelarEdicionCategoria() {
-            document.getElementById('form-categoria').reset();
-            document.getElementById('cat-id').value = '';
-            document.getElementById('btn-guardar-cat').textContent = 'Guardar';
-            document.getElementById('btn-cancelar-cat').classList.add('d-none');
-        }
-
-        async function cambiarEstadoCategoria(id, nuevoEstado) {
-            try {
-                await apiFetch(`/api/categorias/${id}/estado`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ activa: nuevoEstado })
-                });
-                cargarCategorias();
-            } catch (err) {
-                alert(err.message);
+            function prepararEdicionCategoria(id) {
+                const cat = categoriasGlobal.find(c => c.id === id);
+                if (!cat) return;
+                document.getElementById('cat-id').value = cat.id;
+                document.getElementById('cat-nombre').value = cat.nombre;
+                document.getElementById('cat-tipo').value = cat.tipo;
+                document.getElementById('cat-descripcion').value = cat.descripcion || '';
+                document.getElementById('btn-guardar-cat').textContent = 'Actualizar';
+                document.getElementById('btn-cancelar-cat').classList.remove('d-none');
             }
-        }
 
-        document.getElementById('form-categoria').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const idCat = document.getElementById('cat-id').value;
-            const payload = {
-                nombre: document.getElementById('cat-nombre').value.trim(),
-                tipo: document.getElementById('cat-tipo').value,
-                descripcion: document.getElementById('cat-descripcion').value.trim()
-            };
-            try {
-                if (idCat) {
-                    await apiFetch(`/api/categorias/${idCat}`, {
-                        method: 'PUT',
-                        body: JSON.stringify(payload)
+            function cancelarEdicionCategoria() {
+                document.getElementById('form-categoria').reset();
+                document.getElementById('cat-id').value = '';
+                document.getElementById('btn-guardar-cat').textContent = 'Guardar';
+                document.getElementById('btn-cancelar-cat').classList.add('d-none');
+            }
+
+            async function cambiarEstadoCategoria(id, nuevoEstado) {
+                try {
+                    await apiFetch(`/api/categorias/${id}/estado`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ activa: nuevoEstado })
                     });
-                } else {
-                    await apiFetch('/api/categorias', {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    });
+                    cargarCategorias();
+                } catch (err) {
+                    alert(err.message);
                 }
-                cancelarEdicionCategoria();
-                cargarCategorias();
-            } catch (err) {
-                alert(err.message);
             }
-        });
 
-        // MÓDULO 6: REPORTES FINANCIEROS Y EXPORTACIÓN
-        function actualizarCategoriasReporte() {
-            const tipo = document.getElementById('rep-tipo').value;
-            const select = document.getElementById('rep-categoria');
-            const valorActual = select.value;
-            const filtradas = tipo
-                ? categoriasGlobal.filter(c => c.tipo === tipo)
-                : categoriasGlobal;
+            document.getElementById('form-categoria').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const idCat = document.getElementById('cat-id').value;
+                const payload = {
+                    nombre: document.getElementById('cat-nombre').value.trim(),
+                    tipo: document.getElementById('cat-tipo').value,
+                    descripcion: document.getElementById('cat-descripcion').value.trim()
+                };
+                try {
+                    if (idCat) {
+                        await apiFetch(`/api/categorias/${idCat}`, {
+                            method: 'PUT',
+                            body: JSON.stringify(payload)
+                        });
+                    } else {
+                        await apiFetch('/api/categorias', {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                    }
+                    cancelarEdicionCategoria();
+                    cargarCategorias();
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
 
-            select.innerHTML = '<option value="">Todas las categorías</option>' +
-                filtradas.map(c => `<option value="${c.id}">${c.nombre} (${c.tipo})</option>`).join('');
-            select.value = valorActual;
-        }
-
-        function aplicarPeriodoReporte(periodo) {
-            const hoy = new Date();
-            const yyyy = hoy.getFullYear();
-            const mm = String(hoy.getMonth() + 1).padStart(2, '0');
-            const dd = String(hoy.getDate()).padStart(2, '0');
-
-            const inputInicio = document.getElementById('rep-inicio');
-            const inputFin = document.getElementById('rep-fin');
-
-            if (periodo === 'diario') {
-                const fechaHoy = `${yyyy}-${mm}-${dd}`;
-                inputInicio.value = fechaHoy;
-                inputFin.value = fechaHoy;
-            } else if (periodo === 'mensual') {
-                inputInicio.value = `${yyyy}-${mm}-01`;
-                inputFin.value = `${yyyy}-${mm}-${dd}`;
-            } else if (periodo === 'anual') {
-                inputInicio.value = `${yyyy}-01-01`;
-                inputFin.value = `${yyyy}-12-31`;
-            } else {
-                inputInicio.value = '';
-                inputFin.value = '';
-            }
-            generarReporte();
-        }
-
-        async function generarReporte() {
-            try {
-                const fi = document.getElementById('rep-inicio').value;
-                const ff = document.getElementById('rep-fin').value;
+            // MÓDULO 6: REPORTES FINANCIEROS Y EXPORTACIÓN
+            function actualizarCategoriasReporte() {
                 const tipo = document.getElementById('rep-tipo').value;
-                const catId = document.getElementById('rep-categoria').value;
+                const select = document.getElementById('rep-categoria');
+                const valorActual = select.value;
+                const filtradas = tipo
+                    ? categoriasGlobal.filter(c => c.tipo === tipo)
+                    : categoriasGlobal;
 
-                const params = new URLSearchParams();
-                if (fi) params.append('fechaInicio', fi);
-                if (ff) params.append('fechaFin', ff);
-                if (tipo) params.append('tipo', tipo);
-                if (catId) params.append('categoria_id', catId);
+                select.innerHTML = '<option value="">Todas las categorías</option>' +
+                    filtradas.map(c => `<option value="${c.id}">${c.nombre} (${c.tipo})</option>`).join('');
+                select.value = valorActual;
+            }
 
-                datosReporteActual = await apiFetch(`/api/movimientos?${params.toString()}`);
+            function aplicarPeriodoReporte(periodo) {
+                const hoy = new Date();
+                const yyyy = hoy.getFullYear();
+                const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+                const dd = String(hoy.getDate()).padStart(2, '0');
 
-                let sumaIngresos = 0;
-                let sumaGastos = 0;
+                const inputInicio = document.getElementById('rep-inicio');
+                const inputFin = document.getElementById('rep-fin');
 
-                document.getElementById('tabla-reportes').innerHTML = datosReporteActual.map(m => {
-                    const montoNum = Number(m.monto);
-                    if (m.tipo === 'ingreso') sumaIngresos += montoNum;
-                    else sumaGastos += montoNum;
+                if (periodo === 'diario') {
+                    const fechaHoy = `${yyyy}-${mm}-${dd}`;
+                    inputInicio.value = fechaHoy;
+                    inputFin.value = fechaHoy;
+                } else if (periodo === 'mensual') {
+                    inputInicio.value = `${yyyy}-${mm}-01`;
+                    inputFin.value = `${yyyy}-${mm}-${dd}`;
+                } else if (periodo === 'anual') {
+                    inputInicio.value = `${yyyy}-01-01`;
+                    inputFin.value = `${yyyy}-12-31`;
+                } else {
+                    inputInicio.value = '';
+                    inputFin.value = '';
+                }
+                generarReporte();
+            }
 
-                    return `
+            async function generarReporte() {
+                try {
+                    const fi = document.getElementById('rep-inicio').value;
+                    const ff = document.getElementById('rep-fin').value;
+                    const tipo = document.getElementById('rep-tipo').value;
+                    const catId = document.getElementById('rep-categoria').value;
+
+                    const params = new URLSearchParams();
+                    if (fi) params.append('fechaInicio', fi);
+                    if (ff) params.append('fechaFin', ff);
+                    if (tipo) params.append('tipo', tipo);
+                    if (catId) params.append('categoria_id', catId);
+
+                    datosReporteActual = await apiFetch(`/api/movimientos?${params.toString()}`);
+
+                    let sumaIngresos = 0;
+                    let sumaGastos = 0;
+
+                    document.getElementById('tabla-reportes').innerHTML = datosReporteActual.map(m => {
+                        const montoNum = Number(m.monto);
+                        if (m.tipo === 'ingreso') sumaIngresos += montoNum;
+                        else sumaGastos += montoNum;
+
+                        return `
                         <tr>
                             <td>${m.fecha}</td>
                             <td><span class="badge bg-${m.tipo === 'ingreso' ? 'success' : 'danger'}">${m.tipo.toUpperCase()}</span></td>
@@ -688,39 +699,39 @@
                             <td>${m.registrado_por || ''}</td>
                         </tr>
                     `;
-                }).join('');
+                    }).join('');
 
-                const balance = sumaIngresos - sumaGastos;
-                document.getElementById('rep-total-ingresos').textContent = `$${sumaIngresos.toFixed(2)}`;
-                document.getElementById('rep-total-gastos').textContent = `$${sumaGastos.toFixed(2)}`;
-                const elBalance = document.getElementById('rep-total-balance');
-                elBalance.textContent = `$${balance.toFixed(2)}`;
-                elBalance.className = `fs-5 ${balance >= 0 ? 'text-primary' : 'text-danger'}`;
-            } catch (err) {
-                alert(err.message);
+                    const balance = sumaIngresos - sumaGastos;
+                    document.getElementById('rep-total-ingresos').textContent = `$${sumaIngresos.toFixed(2)}`;
+                    document.getElementById('rep-total-gastos').textContent = `$${sumaGastos.toFixed(2)}`;
+                    const elBalance = document.getElementById('rep-total-balance');
+                    elBalance.textContent = `$${balance.toFixed(2)}`;
+                    elBalance.className = `fs-5 ${balance >= 0 ? 'text-primary' : 'text-danger'}`;
+                } catch (err) {
+                    alert(err.message);
+                }
             }
-        }
 
-        function exportarCSV() {
-            if (!datosReporteActual.length) return alert('Consulte un reporte con datos primero.');
-            const cabeceras = 'Fecha,Tipo,Categoria,Concepto,Monto,RegistradoPor\n';
-            const filas = datosReporteActual.map(m =>
-                `${m.fecha},${m.tipo},"${(m.categoria || '').replace(/"/g, '""')}","${(m.concepto || '').replace(/"/g, '""')}",${Number(m.monto).toFixed(2)},"${(m.registrado_por || '').replace(/"/g, '""')}"`
-            ).join('\n');
-            const blob = new Blob(['\uFEFF' + cabeceras + filas], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `reporte_financiero_${new Date().toISOString().slice(0, 10)}.csv`;
-            link.click();
-        }
+            function exportarCSV() {
+                if (!datosReporteActual.length) return alert('Consulte un reporte con datos primero.');
+                const cabeceras = 'Fecha,Tipo,Categoria,Concepto,Monto,RegistradoPor\n';
+                const filas = datosReporteActual.map(m =>
+                    `${m.fecha},${m.tipo},"${(m.categoria || '').replace(/"/g, '""')}","${(m.concepto || '').replace(/"/g, '""')}",${Number(m.monto).toFixed(2)},"${(m.registrado_por || '').replace(/"/g, '""')}"`
+                ).join('\n');
+                const blob = new Blob(['\uFEFF' + cabeceras + filas], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `reporte_financiero_${new Date().toISOString().slice(0, 10)}.csv`;
+                link.click();
+            }
 
-        // MÓDULO 1: ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN)
-        async function cargarUsuarios() {
-            try {
-                usuariosGlobal = await apiFetch('/api/usuarios');
-                const tbody = document.getElementById('tabla-usuarios');
-                if (tbody) {
-                    tbody.innerHTML = usuariosGlobal.map(u => `
+            // MÓDULO 1: ADMINISTRACIÓN DE USUARIOS (SOLO ADMIN)
+            async function cargarUsuarios() {
+                try {
+                    usuariosGlobal = await apiFetch('/api/usuarios');
+                    const tbody = document.getElementById('tabla-usuarios');
+                    if (tbody) {
+                        tbody.innerHTML = usuariosGlobal.map(u => `
                         <tr>
                             <td>${u.id}</td>
                             <td class="fw-semibold">${u.nombre}</td>
@@ -739,82 +750,82 @@
                             </td>
                         </tr>
                     `).join('');
+                    }
+                } catch (err) {
+                    console.error(err);
                 }
-            } catch (err) {
-                console.error(err);
             }
-        }
 
-        function prepararEdicionUsuario(id) {
-            const u = usuariosGlobal.find(usr => usr.id === id);
-            if (!u) return;
-            document.getElementById('usr-id').value = u.id;
-            document.getElementById('usr-nombre').value = u.nombre;
-            document.getElementById('usr-email').value = u.email;
-            document.getElementById('usr-rol').value = u.rol;
-            const passInput = document.getElementById('usr-pass');
-            passInput.value = '';
-            passInput.required = false;
-            passInput.placeholder = 'Dejar vacío para no cambiar';
-            document.getElementById('btn-guardar-usr').textContent = 'Actualizar';
-            document.getElementById('btn-cancelar-usr').classList.remove('d-none');
-        }
-
-        function cancelarEdicionUsuario() {
-            document.getElementById('form-usuario').reset();
-            document.getElementById('usr-id').value = '';
-            const passInput = document.getElementById('usr-pass');
-            passInput.required = true;
-            passInput.placeholder = 'Mín. 6 caracteres';
-            document.getElementById('btn-guardar-usr').textContent = 'Registrar';
-            document.getElementById('btn-cancelar-usr').classList.add('d-none');
-        }
-
-        async function cambiarEstadoUsuario(id, nuevoEstado) {
-            try {
-                await apiFetch(`/api/usuarios/${id}/estado`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ activo: nuevoEstado })
-                });
-                cargarUsuarios();
-            } catch (err) {
-                alert(err.message);
+            function prepararEdicionUsuario(id) {
+                const u = usuariosGlobal.find(usr => usr.id === id);
+                if (!u) return;
+                document.getElementById('usr-id').value = u.id;
+                document.getElementById('usr-nombre').value = u.nombre;
+                document.getElementById('usr-email').value = u.email;
+                document.getElementById('usr-rol').value = u.rol;
+                const passInput = document.getElementById('usr-pass');
+                passInput.value = '';
+                passInput.required = false;
+                passInput.placeholder = 'Dejar vacío para no cambiar';
+                document.getElementById('btn-guardar-usr').textContent = 'Actualizar';
+                document.getElementById('btn-cancelar-usr').classList.remove('d-none');
             }
-        }
 
-        document.getElementById('form-usuario').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const idUsr = document.getElementById('usr-id').value;
-            const payload = {
-                nombre: document.getElementById('usr-nombre').value.trim(),
-                email: document.getElementById('usr-email').value.trim(),
-                password: document.getElementById('usr-pass').value,
-                rol: document.getElementById('usr-rol').value
-            };
-            try {
-                if (idUsr) {
-                    await apiFetch(`/api/usuarios/${idUsr}`, {
-                        method: 'PUT',
-                        body: JSON.stringify(payload)
+            function cancelarEdicionUsuario() {
+                document.getElementById('form-usuario').reset();
+                document.getElementById('usr-id').value = '';
+                const passInput = document.getElementById('usr-pass');
+                passInput.required = true;
+                passInput.placeholder = 'Mín. 6 caracteres';
+                document.getElementById('btn-guardar-usr').textContent = 'Registrar';
+                document.getElementById('btn-cancelar-usr').classList.add('d-none');
+            }
+
+            async function cambiarEstadoUsuario(id, nuevoEstado) {
+                try {
+                    await apiFetch(`/api/usuarios/${id}/estado`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ activo: nuevoEstado })
                     });
-                } else {
-                    await apiFetch('/api/usuarios', {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    });
+                    cargarUsuarios();
+                } catch (err) {
+                    alert(err.message);
                 }
-                cancelarEdicionUsuario();
-                cargarUsuarios();
-            } catch (err) {
-                alert(err.message);
             }
-        });
 
-        // MÓDULO 7: BITÁCORA
-        async function cargarBitacora() {
-            try {
-                const logs = await apiFetch('/api/bitacora');
-                document.getElementById('tabla-bitacora').innerHTML = logs.map(l => `
+            document.getElementById('form-usuario').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const idUsr = document.getElementById('usr-id').value;
+                const payload = {
+                    nombre: document.getElementById('usr-nombre').value.trim(),
+                    email: document.getElementById('usr-email').value.trim(),
+                    password: document.getElementById('usr-pass').value,
+                    rol: document.getElementById('usr-rol').value
+                };
+                try {
+                    if (idUsr) {
+                        await apiFetch(`/api/usuarios/${idUsr}`, {
+                            method: 'PUT',
+                            body: JSON.stringify(payload)
+                        });
+                    } else {
+                        await apiFetch('/api/usuarios', {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                    }
+                    cancelarEdicionUsuario();
+                    cargarUsuarios();
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+
+            // MÓDULO 7: BITÁCORA
+            async function cargarBitacora() {
+                try {
+                    const logs = await apiFetch('/api/bitacora');
+                    document.getElementById('tabla-bitacora').innerHTML = logs.map(l => `
                     <tr>
                         <td>${l.fecha}</td>
                         <td class="fw-semibold">${l.usuario}</td>
@@ -824,39 +835,39 @@
                         <td><code>${l.ip || ''}</code></td>
                     </tr>
                 `).join('');
-            } catch (err) {
-                alert(err.message);
+                } catch (err) {
+                    alert(err.message);
+                }
             }
-        }
 
-        // Exponer todas las funciones necesarias en window para los eventos onclick/onchange del HTML
-        Object.assign(window, {
-            navegar,
-            alternarTema,
-            cargarPanel,
-            limpiarFiltroPanel,
-            filtrarCategoriasSelect,
-            prepararEdicionMovimiento,
-            cancelarEdicionMovimiento,
-            prepararEdicionCategoria,
-            cancelarEdicionCategoria,
-            cambiarEstadoCategoria,
-            actualizarCategoriasReporte,
-            aplicarPeriodoReporte,
-            generarReporte,
-            exportarCSV,
-            prepararEdicionUsuario,
-            cancelarEdicionUsuario,
-            cambiarEstadoUsuario,
-            cargarBitacora,
-            cerrarSesion
-        });
+            // Exponer todas las funciones necesarias en window para los eventos onclick/onchange del HTML
+            Object.assign(window, {
+                navegar,
+                alternarTema,
+                cargarPanel,
+                limpiarFiltroPanel,
+                filtrarCategoriasSelect,
+                prepararEdicionMovimiento,
+                cancelarEdicionMovimiento,
+                prepararEdicionCategoria,
+                cancelarEdicionCategoria,
+                cambiarEstadoCategoria,
+                actualizarCategoriasReporte,
+                aplicarPeriodoReporte,
+                generarReporte,
+                exportarCSV,
+                prepararEdicionUsuario,
+                cancelarEdicionUsuario,
+                cambiarEstadoUsuario,
+                cargarBitacora,
+                cerrarSesion
+            });
 
-        // Restaurar sesión automáticamente si ya había iniciado sesión antes
-        if (token && usuarioActual) {
-            iniciarApp(usuarioActual);
-        }
-    </script>
+            // Restaurar sesión automáticamente si ya había iniciado sesión antes
+            if (token && usuarioActual) {
+                iniciarApp(usuarioActual);
+            }
+        </script>
 </body>
 
 </html>

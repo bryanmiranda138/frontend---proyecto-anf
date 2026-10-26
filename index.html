@@ -71,14 +71,20 @@
         }
 
         @media print {
-            nav, .no-print {
+
+            nav,
+            .no-print {
                 display: none !important;
             }
+
             body {
                 background-color: #fff !important;
                 color: #000 !important;
             }
-            .card, .table, .superficie-app {
+
+            .card,
+            .table,
+            .superficie-app {
                 box-shadow: none !important;
                 background-color: #fff !important;
             }
@@ -93,12 +99,25 @@
         <div class="row justify-content-center">
             <div class="col-11 col-sm-8 col-md-5 col-lg-4">
                 <div class="d-flex justify-content-end mb-2">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alternarTema()" id="btn-tema-login">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alternarTema()"
+                        id="btn-tema-login">
                         🌙 Modo Oscuro
                     </button>
                 </div>
-                <div class="card shadow-sm superficie-app">
+                <!-- Se agregó overflow-hidden para que la barra de progreso no se salga de los bordes redondeados -->
+                <div class="card shadow-sm superficie-app overflow-hidden">
+
+                    <!-- Barra de carga animada (oculta por defecto) -->
+                    <div class="progress d-none" id="login-progress" style="height: 4px; border-radius: 0;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated w-100" role="progressbar">
+                        </div>
+                    </div>
+
                     <div class="card-body p-4">
+                        <div class="text-center mb-3">
+                            <img src="/images/fpc.jpg" alt="Control Financiero"
+                                style="max-height: 90px; border-radius: 50%;">
+                        </div>
                         <h4 class="text-center mb-4">Control Financiero</h4>
                         <form id="form-login">
                             <div class="mb-3">
@@ -109,7 +128,13 @@
                                 <label class="form-label">Contraseña</label>
                                 <input type="password" id="login-pass" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                            <!-- Botón modificado con spinner -->
+                            <button type="submit" id="btn-login-submit"
+                                class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
+                                <span id="login-spinner" class="spinner-border spinner-border-sm d-none" role="status"
+                                    aria-hidden="true"></span>
+                                <span id="login-text">Iniciar Sesión</span>
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -122,13 +147,16 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" href="#" onclick="navegar('panel'); return false;">FinanzasPro SPA</a>
-                
+
                 <!-- Controles rápidos en móvil + Botón Hamburguesa -->
                 <div class="d-flex align-items-center gap-2 d-lg-none">
-                    <button type="button" class="btn btn-outline-light btn-sm" onclick="alternarTema()" title="Cambiar tema">
+                    <button type="button" class="btn btn-outline-light btn-sm" onclick="alternarTema()"
+                        title="Cambiar tema">
                         <span class="icono-tema">🌙</span>
                     </button>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir menú">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false"
+                        aria-label="Abrir menú">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
@@ -136,20 +164,29 @@
                 <!-- Contenido colapsable del Navbar -->
                 <div class="collapse navbar-collapse" id="menuNavegacion">
                     <div class="navbar-nav me-auto my-2 my-lg-0">
-                        <button class="nav-link btn btn-link activo-nav" id="nav-panel" onclick="navegar('panel')">Panel Financiero</button>
-                        <button class="nav-link btn btn-link" id="nav-movimientos" onclick="navegar('movimientos')">Ingresos y Gastos</button>
-                        <button class="nav-link btn btn-link" id="nav-categorias" onclick="navegar('categorias')">Categorías</button>
-                        <button class="nav-link btn btn-link" id="nav-reportes" onclick="navegar('reportes')">Reportes</button>
-                        <button class="nav-link btn btn-link solo-admin" id="nav-usuarios" onclick="navegar('usuarios')">Usuarios</button>
-                        <button class="nav-link btn btn-link solo-admin" id="nav-bitacora" onclick="navegar('bitacora')">Bitácora</button>
+                        <button class="nav-link btn btn-link activo-nav" id="nav-panel" onclick="navegar('panel')">Panel
+                            Financiero</button>
+                        <button class="nav-link btn btn-link" id="nav-movimientos"
+                            onclick="navegar('movimientos')">Ingresos y Gastos</button>
+                        <button class="nav-link btn btn-link" id="nav-categorias"
+                            onclick="navegar('categorias')">Categorías</button>
+                        <button class="nav-link btn btn-link" id="nav-reportes"
+                            onclick="navegar('reportes')">Reportes</button>
+                        <button class="nav-link btn btn-link solo-admin" id="nav-usuarios"
+                            onclick="navegar('usuarios')">Usuarios</button>
+                        <button class="nav-link btn btn-link solo-admin" id="nav-bitacora"
+                            onclick="navegar('bitacora')">Bitácora</button>
                     </div>
 
-                    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-secondary border-opacity-25 border-lg-0">
-                        <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-inline-block" onclick="alternarTema()" title="Cambiar modo oscuro/claro">
+                    <div
+                        class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-secondary border-opacity-25 border-lg-0">
+                        <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-inline-block"
+                            onclick="alternarTema()" title="Cambiar modo oscuro/claro">
                             <span class="icono-tema">🌙</span> <span class="texto-tema">Oscuro</span>
                         </button>
                         <span class="navbar-text text-light small me-lg-2" id="info-usuario"></span>
-                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="cerrarSesion()">Cerrar Sesión</button>
+                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="cerrarSesion()">Cerrar
+                            Sesión</button>
                     </div>
                 </div>
             </div>
@@ -165,16 +202,19 @@
                     <div class="col-12 col-lg-auto no-print">
                         <div class="row g-2">
                             <div class="col-6 col-sm-auto">
-                                <input type="date" id="filtro-inicio" class="form-control form-control-sm" title="Fecha inicio">
+                                <input type="date" id="filtro-inicio" class="form-control form-control-sm"
+                                    title="Fecha inicio">
                             </div>
                             <div class="col-6 col-sm-auto">
-                                <input type="date" id="filtro-fin" class="form-control form-control-sm" title="Fecha fin">
+                                <input type="date" id="filtro-fin" class="form-control form-control-sm"
+                                    title="Fecha fin">
                             </div>
                             <div class="col-6 col-sm-auto">
                                 <button class="btn btn-primary btn-sm w-100" onclick="cargarPanel()">Filtrar</button>
                             </div>
                             <div class="col-6 col-sm-auto">
-                                <button class="btn btn-outline-secondary btn-sm w-100" onclick="limpiarFiltroPanel()">Limpiar</button>
+                                <button class="btn btn-outline-secondary btn-sm w-100"
+                                    onclick="limpiarFiltroPanel()">Limpiar</button>
                             </div>
                         </div>
                     </div>
@@ -253,7 +293,8 @@
                     </div>
                     <div class="col-12 col-md-3">
                         <label class="form-label">Concepto</label>
-                        <input type="text" id="mov-concepto" class="form-control" placeholder="Ej. Pago de alquiler, Venta..." required>
+                        <input type="text" id="mov-concepto" class="form-control"
+                            placeholder="Ej. Pago de alquiler, Venta..." required>
                     </div>
                     <div class="col-6 col-md-2">
                         <label class="form-label">Monto ($)</label>
@@ -264,7 +305,8 @@
                         <input type="date" id="mov-fecha" class="form-control" required>
                     </div>
                     <div class="col-12 text-end">
-                        <button type="button" id="btn-cancelar-mov" class="btn btn-secondary d-none me-2" onclick="cancelarEdicionMovimiento()">Cancelar Edición</button>
+                        <button type="button" id="btn-cancelar-mov" class="btn btn-secondary d-none me-2"
+                            onclick="cancelarEdicionMovimiento()">Cancelar Edición</button>
                         <button type="submit" id="btn-guardar-mov" class="btn btn-success">Guardar Movimiento</button>
                     </div>
                 </form>
@@ -291,11 +333,13 @@
             <section id="vista-categorias" class="vista-spa">
                 <h3 class="mb-3">Gestión de Categorías Financieras</h3>
 
-                <form id="form-categoria" class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 solo-admin no-print mx-0">
+                <form id="form-categoria"
+                    class="row g-3 superficie-app p-3 rounded shadow-sm mb-4 solo-admin no-print mx-0">
                     <input type="hidden" id="cat-id">
                     <div class="col-12 col-md-4">
                         <label class="form-label">Nombre de Categoría</label>
-                        <input type="text" id="cat-nombre" class="form-control" placeholder="Ej. Servicios Básicos, Ventas..." required>
+                        <input type="text" id="cat-nombre" class="form-control"
+                            placeholder="Ej. Servicios Básicos, Ventas..." required>
                     </div>
                     <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label">Tipo</label>
@@ -310,7 +354,8 @@
                     </div>
                     <div class="col-12 col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" id="btn-guardar-cat" class="btn btn-primary w-100">Guardar</button>
-                        <button type="button" id="btn-cancelar-cat" class="btn btn-secondary d-none" onclick="cancelarEdicionCategoria()">✕</button>
+                        <button type="button" id="btn-cancelar-cat" class="btn btn-secondary d-none"
+                            onclick="cancelarEdicionCategoria()">✕</button>
                     </div>
                 </form>
 
@@ -337,13 +382,18 @@
                     <h3 class="mb-0">Reportes Financieros Filtrados</h3>
                     <div class="d-flex flex-wrap gap-2 no-print">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Períodos rápidos">
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('diario')">Hoy</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('mensual')">Mes</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="aplicarPeriodoReporte('anual')">Año</button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="aplicarPeriodoReporte('todos')">Todo</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="aplicarPeriodoReporte('diario')">Hoy</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="aplicarPeriodoReporte('mensual')">Mes</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="aplicarPeriodoReporte('anual')">Año</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                onclick="aplicarPeriodoReporte('todos')">Todo</button>
                         </div>
                         <button class="btn btn-success btn-sm" onclick="exportarCSV()">Exportar CSV</button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">Imprimir / PDF</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">Imprimir /
+                            PDF</button>
                     </div>
                 </div>
 
@@ -358,7 +408,8 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-3">
                         <label class="form-label small text-body-secondary mb-1">Tipo de Movimiento</label>
-                        <select id="rep-tipo" class="form-select form-select-sm" onchange="actualizarCategoriasReporte()">
+                        <select id="rep-tipo" class="form-select form-select-sm"
+                            onchange="actualizarCategoriasReporte()">
                             <option value="">Todos los tipos</option>
                             <option value="ingreso">Solo Ingresos</option>
                             <option value="gasto">Solo Gastos</option>
@@ -371,7 +422,8 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-2 d-flex align-items-end">
-                        <button class="btn btn-primary btn-sm w-100" onclick="generarReporte()">Consultar Reporte</button>
+                        <button class="btn btn-primary btn-sm w-100" onclick="generarReporte()">Consultar
+                            Reporte</button>
                     </div>
                 </div>
 
@@ -429,7 +481,8 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Contraseña</label>
-                        <input type="password" id="usr-pass" class="form-control" placeholder="Mín. 6 caracteres" required>
+                        <input type="password" id="usr-pass" class="form-control" placeholder="Mín. 6 caracteres"
+                            required>
                     </div>
                     <div class="col-12 col-sm-6 col-md-2">
                         <label class="form-label">Rol</label>
@@ -440,7 +493,8 @@
                     </div>
                     <div class="col-12 col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" id="btn-guardar-usr" class="btn btn-primary w-100">Registrar</button>
-                        <button type="button" id="btn-cancelar-usr" class="btn btn-secondary d-none" onclick="cancelarEdicionUsuario()">✕</button>
+                        <button type="button" id="btn-cancelar-usr" class="btn btn-secondary d-none"
+                            onclick="cancelarEdicionUsuario()">✕</button>
                     </div>
                 </form>
 
@@ -465,7 +519,8 @@
             <section id="vista-bitacora" class="vista-spa">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3 class="mb-0">Bitácora de Auditoría y Seguridad</h3>
-                    <button class="btn btn-outline-primary btn-sm no-print" onclick="cargarBitacora()">Actualizar</button>
+                    <button class="btn btn-outline-primary btn-sm no-print"
+                        onclick="cargarBitacora()">Actualizar</button>
                 </div>
                 <div class="table-responsive superficie-app rounded shadow-sm">
                     <table class="table table-sm table-hover mb-0 align-middle">
@@ -595,20 +650,42 @@
         // MÓDULO 1: LOGIN Y SESIÓN
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Elementos de la interfaz de carga
+            const btnSubmit = document.getElementById('btn-login-submit');
+            const loginText = document.getElementById('login-text');
+            const loginSpinner = document.getElementById('login-spinner');
+            const loginProgress = document.getElementById('login-progress');
+
+            // 1. Activar estado de carga (bloquear botón y mostrar animaciones)
+            btnSubmit.disabled = true;
+            loginText.textContent = 'Iniciando...';
+            loginSpinner.classList.remove('d-none');
+            loginProgress.classList.remove('d-none');
+
             try {
                 const email = document.getElementById('login-email').value.trim();
                 const password = document.getElementById('login-pass').value;
+
                 const data = await apiFetch('/api/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({ email, password })
                 });
+
                 token = data.token;
                 usuarioActual = data.usuario;
                 localStorage.setItem('token', token);
                 localStorage.setItem('usuario', JSON.stringify(usuarioActual));
+
                 iniciarApp(usuarioActual);
             } catch (err) {
                 alert(err.message);
+            } finally {
+                // 2. Restaurar el botón en caso de error (o al finalizar)
+                btnSubmit.disabled = false;
+                loginText.textContent = 'Iniciar Sesión';
+                loginSpinner.classList.add('d-none');
+                loginProgress.classList.add('d-none');
             }
         });
 
@@ -633,7 +710,7 @@
         }
 
         async function cerrarSesion() {
-            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+            await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             location.reload();

@@ -105,31 +105,43 @@
 
         @media print {
 
-            /* Elimina el scroll horizontal de Bootstrap al imprimir */
+            /* Oculta controles, filtros y botones de la barra superior */
+            .no-print,
+            .d-print-none,
+            .navbar button,
+            .navbar-toggler {
+                display: none !important;
+            }
+
+            /* Quita el scroll horizontal de Bootstrap */
             .contenedor-tabla-reporte,
             .table-responsive {
                 overflow: visible !important;
                 box-shadow: none !important;
             }
 
-            /* Ajusta el ancho y la fuente de la tabla al papel */
+            /* Ajuste automático y limpio de columnas */
             .tabla-reporte {
                 width: 100% !important;
-                table-layout: fixed;
+                table-layout: auto !important;
                 font-size: 0.78rem !important;
             }
 
             .tabla-reporte th,
             .tabla-reporte td {
-                padding: 0.35rem 0.4rem !important;
-                word-wrap: break-word;
-                overflow-wrap: break-word;
+                padding: 0.35rem 0.45rem !important;
+                word-break: normal !important;
             }
 
-            /* Evita que las fechas y montos se dividan en dos líneas */
+            /* Mantiene Fecha, Tipo y Monto en una sola línea sin solaparse */
+            .tabla-reporte th:nth-child(1),
             .tabla-reporte td:nth-child(1),
+            .tabla-reporte th:nth-child(2),
+            .tabla-reporte td:nth-child(2),
+            .tabla-reporte th:nth-child(5),
             .tabla-reporte td:nth-child(5) {
                 white-space: nowrap !important;
+                width: 1%;
             }
         }
     </style>
@@ -456,7 +468,7 @@
             <section id="vista-reportes" class="vista-spa">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                     <h3 class="mb-0">Reportes Financieros Filtrados</h3>
-                    <div class="d-flex flex-wrap gap-2 no-print">
+                    <div class="d-flex flex-wrap gap-2 no-print d-print-none">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Períodos rápidos">
                             <button type="button" class="btn btn-outline-primary"
                                 onclick="aplicarPeriodoReporte('diario')">Hoy</button>
@@ -473,7 +485,7 @@
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3 superficie-app p-3 rounded shadow-sm no-print mx-0">
+                <div class="row g-2 mb-3 superficie-app p-3 rounded shadow-sm no-print d-print-none mx-0">
                     <div class="col-6 col-md-2">
                         <label class="form-label small text-body-secondary mb-1">Fecha Inicio</label>
                         <input type="date" id="rep-inicio" class="form-control form-control-sm">
@@ -530,12 +542,12 @@
                     <table class="table table-sm table-bordered table-striped mb-0 align-middle tabla-reporte">
                         <thead class="table-dark">
                             <tr>
-                                <th class="text-nowrap" style="width: 12%;">Fecha</th>
-                                <th class="text-nowrap" style="width: 10%;">Tipo</th>
-                                <th style="width: 22%;">Categoría</th>
-                                <th style="width: 28%;">Concepto</th>
-                                <th class="text-nowrap text-end" style="width: 11%;">Monto</th>
-                                <th style="width: 17%;">Registrado por</th>
+                                <th class="text-nowrap">Fecha</th>
+                                <th class="text-nowrap">Tipo</th>
+                                <th>Categoría</th>
+                                <th>Concepto</th>
+                                <th class="text-nowrap text-end">Monto</th>
+                                <th>Registrado por</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-reportes"></tbody>

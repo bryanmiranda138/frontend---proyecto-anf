@@ -105,21 +105,31 @@
 
         @media print {
 
-            nav,
-            .no-print {
-                display: none !important;
-            }
-
-            body {
-                background-color: #fff !important;
-                color: #000 !important;
-            }
-
-            .card,
-            .table,
-            .superficie-app {
+            /* Elimina el scroll horizontal de Bootstrap al imprimir */
+            .contenedor-tabla-reporte,
+            .table-responsive {
+                overflow: visible !important;
                 box-shadow: none !important;
-                background-color: #fff !important;
+            }
+
+            /* Ajusta el ancho y la fuente de la tabla al papel */
+            .tabla-reporte {
+                width: 100% !important;
+                table-layout: fixed;
+                font-size: 0.78rem !important;
+            }
+
+            .tabla-reporte th,
+            .tabla-reporte td {
+                padding: 0.35rem 0.4rem !important;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            /* Evita que las fechas y montos se dividan en dos líneas */
+            .tabla-reporte td:nth-child(1),
+            .tabla-reporte td:nth-child(5) {
+                white-space: nowrap !important;
             }
         }
     </style>
@@ -150,7 +160,7 @@
                                 style="max-height: 90px; border-radius: 50%;">
                         </div>
                         <h4 class="text-center mb-4">Control Financiero <br>Flores Pet Center</h4>
-                        
+
                         <form id="form-login">
                             <div class="mb-3">
                                 <label class="form-label">Correo electrónico</label>
@@ -248,7 +258,7 @@
 
                         <!-- Botón Cerrar Sesión -->
                         <button
-                            class="btn btn-outline-danger btn-sm d-inline-flex align-items-center justify-content-center gap-2 text-nowrap" 
+                            class="btn btn-outline-danger btn-sm d-inline-flex align-items-center justify-content-center gap-2 text-nowrap"
                             onclick="cerrarSesion()" title="Cerrar sesión">
                             <i class="bi bi-box-arrow-right"></i>
                             <!--<span>Cerrar Sesión</span>-->
@@ -495,19 +505,19 @@
 
                 <!-- Resumen del Reporte Consultado -->
                 <div class="row g-2 mb-3">
-                    <div class="col-12 col-sm-4">
+                    <div class="col-4">
                         <div class="p-2 superficie-app rounded shadow-sm border-start border-4 border-success">
                             <small class="text-body-secondary d-block">Total Ingresos (Filtro)</small>
                             <strong class="text-success fs-5" id="rep-total-ingresos">$0.00</strong>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-4">
+                    <div class="col-4">
                         <div class="p-2 superficie-app rounded shadow-sm border-start border-4 border-danger">
                             <small class="text-body-secondary d-block">Total Gastos (Filtro)</small>
                             <strong class="text-danger fs-5" id="rep-total-gastos">$0.00</strong>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-4">
+                    <div class="col-4">
                         <div class="p-2 superficie-app rounded shadow-sm border-start border-4 border-primary">
                             <small class="text-body-secondary d-block">Balance del Período</small>
                             <strong class="fs-5" id="rep-total-balance">$0.00</strong>
@@ -515,16 +525,17 @@
                     </div>
                 </div>
 
-                <div class="table-responsive superficie-app rounded shadow-sm">
-                    <table class="table table-bordered table-striped mb-0 align-middle">
+                <!-- Tabla de Reportes -->
+                <div class="table-responsive contenedor-tabla-reporte superficie-app rounded shadow-sm">
+                    <table class="table table-sm table-bordered table-striped mb-0 align-middle tabla-reporte">
                         <thead class="table-dark">
                             <tr>
-                                <th>Fecha</th>
-                                <th>Tipo</th>
-                                <th>Categoría</th>
-                                <th>Concepto</th>
-                                <th>Monto</th>
-                                <th>Registrado por</th>
+                                <th class="text-nowrap" style="width: 12%;">Fecha</th>
+                                <th class="text-nowrap" style="width: 10%;">Tipo</th>
+                                <th style="width: 22%;">Categoría</th>
+                                <th style="width: 28%;">Concepto</th>
+                                <th class="text-nowrap text-end" style="width: 11%;">Monto</th>
+                                <th style="width: 17%;">Registrado por</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-reportes"></tbody>
